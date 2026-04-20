@@ -1,1119 +1,851 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shubham Dongarwar — Senior Solution Architect</title>
-  <meta name="description" content="Senior Solution Architect specialising in HA/DR, cloud migrations, and enterprise infrastructure. AWS Certified. Based in Mumbai." />
+  <title>Shubham Dongarwar — Solutions Architect</title>
+  <meta name="description" content="Senior Solutions Architect. HA/DR, cloud migrations, enterprise infrastructure. AWS Certified. Mumbai." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Archivo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
     :root {
-      --navy:    #0B1D3A;
-      --navy2:   #122240;
-      --blue:    #1E40AF;
-      --azure:   #3B82F6;
-      --ice:     #DBEAFE;
-      --white:   #F8FAFF;
-      --off:     #EEF2FF;
-      --text:    #1C2B4A;
-      --muted:   #64748B;
-      --line:    rgba(59,130,246,0.18);
-      --glow:    rgba(59,130,246,0.12);
+      --paper:    #F2EDE4;
+      --paper2:   #EDE7DC;
+      --paper3:   #E6DFD4;
+      --ink:      #0F0D0B;
+      --ink2:     #1E1A16;
+      --muted:    #4A3F32;
+      --faint:    #9A8E80;
+      --line:     rgba(26,22,18,0.055);
+      --line2:    rgba(26,22,18,0.025);
+      --accent:   #1A3A5C;
+      --accent2:  #2356A0;
+      --node-bg:  rgba(26,58,92,0.07);
+      --node-border: rgba(26,58,92,0.30);
     }
-
     html { scroll-behavior: smooth; }
+    body { font-family:'Archivo',sans-serif; background:var(--paper); color:var(--ink); overflow-x:hidden; cursor:none; }
+    #cur { position:fixed; width:6px; height:6px; background:var(--accent); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .15s,height .15s; }
+    #cur-cross { position:fixed; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); width:20px; height:20px; }
+    #cur-cross::before,#cur-cross::after { content:''; position:absolute; background:var(--accent); opacity:0.4; }
+    #cur-cross::before { width:1px; height:20px; left:50%; top:0; }
+    #cur-cross::after { width:20px; height:1px; top:50%; left:0; }
+    .bp-grid { position:absolute; inset:0; pointer-events:none;
+      background-image: linear-gradient(rgba(26,22,18,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(26,22,18,0.055) 1px, transparent 1px), linear-gradient(rgba(26,22,18,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(26,22,18,0.025) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px; }
+    nav { position:fixed; top:0; left:0; right:0; z-index:500; height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 48px; background:rgba(242,237,228,0.94); backdrop-filter:blur(12px); border-bottom:1px solid rgba(26,22,18,0.055); }
+    .nav-logo { display:flex; align-items:center; gap:12px; }
+    .nav-logo-mark { width:28px; height:28px; border:1.5px solid var(--accent); position:relative; display:flex; align-items:center; justify-content:center; }
+    .nav-logo-mark::before { content:''; position:absolute; width:10px; height:10px; border:1px solid var(--accent); opacity:0.5; transform:rotate(45deg); }
+    .nav-logo-text { font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a { font-family:'DM Mono',monospace; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+    .nav-links a:hover { color:var(--accent); }
+    .nav-right { font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--faint); letter-spacing:0.08em; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--white);
-      color: var(--text);
-      overflow-x: hidden;
-      cursor: none;
-    }
+    /* HERO */
+    #hero { min-height:100vh; position:relative; display:grid; grid-template-columns:1fr 1fr; overflow:hidden; }
+    .hero-left { padding:140px 72px 80px; position:relative; z-index:2; display:flex; flex-direction:column; justify-content:center; border-right:1px solid rgba(26,22,18,0.055); }
+    .hero-right { position:relative; z-index:1; overflow:hidden; background:rgba(26,58,92,0.02); }
+    .arch-canvas { position:absolute; inset:0; width:100%; height:100%; }
+    .hero-eyebrow { font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--accent); margin-bottom:32px; display:flex; align-items:center; gap:10px; opacity:0; animation:fadeIn 0.5s ease 0.1s forwards; }
+    .hero-eyebrow .dot { width:6px; height:6px; border-radius:50%; background:var(--accent); }
+    .hero-name { font-family:'Instrument Serif',serif; font-size:clamp(3.8rem,6vw,6.2rem); font-weight:400; line-height:0.95; color:var(--ink); letter-spacing:-0.02em; margin-bottom:10px; opacity:0; animation:fadeIn 0.5s ease 0.2s forwards; }
+    .hero-name em { font-style:italic; color:var(--accent); }
+    .hero-role { font-family:'DM Mono',monospace; font-size:0.8rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:40px; margin-top:14px; opacity:0; animation:fadeIn 0.5s ease 0.3s forwards; }
+    .hero-thesis { font-size:1.15rem; font-weight:400; line-height:1.75; color:var(--ink2); max-width:480px; margin-bottom:44px; border-left:2px solid var(--accent); padding-left:22px; opacity:0; animation:fadeIn 0.5s ease 0.45s forwards; }
+    .hero-cta { display:flex; gap:16px; opacity:0; animation:fadeIn 0.5s ease 0.6s forwards; margin-bottom:52px; }
+    .btn-blueprint { font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:0.12em; text-transform:uppercase; padding:15px 32px; background:var(--accent); color:var(--paper); border:none; text-decoration:none; cursor:none; display:inline-block; transition:background 0.2s; position:relative; }
+    .btn-blueprint::after { content:''; position:absolute; bottom:-3px; right:-3px; width:100%; height:100%; border:1px solid var(--accent); opacity:0.4; pointer-events:none; }
+    .btn-blueprint:hover { background:var(--accent2); }
+    .btn-outline { font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:0.12em; text-transform:uppercase; padding:14px 32px; background:transparent; color:var(--accent); border:1px solid var(--node-border); text-decoration:none; cursor:none; display:inline-block; transition:border-color 0.2s,background 0.2s; }
+    .btn-outline:hover { border-color:var(--accent); background:var(--node-bg); }
+    .hero-callout { display:flex; gap:40px; opacity:0; animation:fadeIn 0.5s ease 0.75s forwards; border-top:1px solid rgba(26,22,18,0.055); padding-top:32px; }
+    .callout-num { font-family:'Instrument Serif',serif; font-size:2.6rem; line-height:1; color:var(--accent); }
+    .callout-label { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-top:5px; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:none;} }
 
-    /* ── Custom cursor ─────────────────────────────── */
-    .cursor {
-      width: 10px; height: 10px;
-      background: var(--azure);
-      border-radius: 50%;
-      position: fixed; top: 0; left: 0;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%,-50%);
-      transition: transform 0.1s ease, width 0.2s, height 0.2s, background 0.2s;
-    }
-    .cursor-ring {
-      width: 36px; height: 36px;
-      border: 1.5px solid var(--azure);
-      border-radius: 50%;
-      position: fixed; top: 0; left: 0;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%,-50%);
-      transition: transform 0.18s ease, width 0.2s, height 0.2s, opacity 0.2s;
-      opacity: 0.6;
-    }
-    body:hover .cursor { opacity: 1; }
+    /* PROOF BAND */
+    #proof { background:var(--accent); padding:0; overflow:hidden; display:flex; }
+    .proof-scroller { display:flex; animation:scroll 28s linear infinite; white-space:nowrap; }
+    .proof-stat { padding:22px 52px; display:flex; align-items:baseline; gap:12px; border-right:1px solid rgba(255,255,255,0.12); }
+    .proof-num { font-family:'Instrument Serif',serif; font-size:2.2rem; color:var(--paper); line-height:1; }
+    .proof-label { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(242,237,228,0.65); max-width:110px; line-height:1.5; }
+    @keyframes scroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-    /* ── Nav ─────────────────────────────────────────── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 5vw;
-      height: 64px;
-      background: rgba(248,250,255,0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--line);
-      transition: box-shadow 0.3s;
-    }
-    nav.scrolled { box-shadow: 0 4px 32px rgba(11,29,58,0.08); }
-    .nav-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800; font-size: 1.1rem;
-      color: var(--navy);
-      letter-spacing: -0.03em;
-      text-decoration: none;
-    }
-    .nav-logo span { color: var(--azure); }
-    .nav-links { display: flex; gap: 2.4rem; list-style: none; }
-    .nav-links a {
-      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--muted); text-decoration: none;
-      transition: color 0.2s;
-      position: relative;
-    }
-    .nav-links a::after {
-      content: ''; position: absolute; bottom: -4px; left: 0;
-      width: 0; height: 1.5px; background: var(--azure);
-      transition: width 0.3s ease;
-    }
-    .nav-links a:hover { color: var(--navy); }
-    .nav-links a:hover::after { width: 100%; }
+    /* SECTIONS */
+    section { position:relative; }
+    .sec-wrap { padding:120px 80px; }
+    .sec-tag { font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; display:flex; align-items:center; gap:12px; }
+    .sec-tag::before { content:''; width:20px; height:1px; background:var(--accent); }
+    .sec-heading { font-family:'Instrument Serif',serif; font-size:clamp(2.8rem,5vw,4.5rem); font-weight:400; line-height:1.05; color:var(--ink); letter-spacing:-0.02em; margin-bottom:80px; }
+    .sec-heading em { color:var(--accent); font-style:italic; }
 
-    /* ── Hero ────────────────────────────────────────── */
-    #hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 120px 5vw 80px;
-      position: relative;
-      overflow: hidden;
-    }
+    /* ENGAGEMENTS */
+    #engagements { background:var(--paper); }
+    .engagement { display:grid; grid-template-columns:220px 1fr; border-top:1px solid rgba(26,22,18,0.055); padding:72px 0; gap:0 88px; position:relative; }
+    .engagement:last-child { border-bottom:1px solid rgba(26,22,18,0.055); }
+    .engagement::before { content:''; position:absolute; top:-1px; left:-1px; width:8px; height:8px; border-top:2px solid var(--accent); border-left:2px solid var(--accent); opacity:0.4; }
+    .eng-num { font-family:'Instrument Serif',serif; font-size:5.5rem; line-height:1; color:var(--faint); display:block; margin-bottom:20px; }
+    .eng-date { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+    .eng-client { font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.08em; color:var(--accent); }
+    .eng-sector { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+    .eng-title { font-family:'Instrument Serif',serif; font-size:clamp(1.8rem,3vw,2.6rem); font-weight:400; line-height:1.15; color:var(--ink); margin-bottom:36px; }
+    .eng-flow { display:grid; grid-template-columns:1fr 36px 1fr 36px 1fr; gap:0; align-items:start; margin-bottom:44px; }
+    .flow-node { background:var(--node-bg); border:1px solid var(--node-border); padding:24px; position:relative; }
+    .flow-node::before { content:attr(data-label); font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:10px; }
+    .flow-node p { font-size:0.92rem; font-weight:400; line-height:1.65; color:var(--ink2); }
+    .flow-arrow { display:flex; align-items:center; justify-content:center; padding-top:44px; }
+    .flow-arrow svg { width:26px; color:var(--faint); }
+    .eng-outcomes { display:flex; gap:0; border-top:1px solid rgba(26,22,18,0.055); padding-top:36px; }
+    .outcome { padding-right:44px; margin-right:44px; border-right:1px solid rgba(26,22,18,0.055); }
+    .outcome:last-child { border-right:none; }
+    .out-val { font-family:'Instrument Serif',serif; font-size:2.6rem; color:var(--accent); line-height:1; }
+    .out-label { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-top:5px; }
 
-    .hero-grid {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(var(--line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--line) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
-    }
+    /* AWS services strip per engagement */
+    .eng-services { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
+    .svc-tag { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.08em; color:var(--accent); padding:4px 10px; border:1px solid var(--node-border); background:var(--node-bg); }
 
-    .hero-blob {
-      position: absolute;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(59,130,246,0.10) 0%, transparent 70%);
-      top: -100px; right: -100px;
-      border-radius: 50%;
-      animation: blobFloat 8s ease-in-out infinite;
-    }
-    .hero-blob2 {
-      position: absolute;
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(30,64,175,0.07) 0%, transparent 70%);
-      bottom: 0; left: -50px;
-      border-radius: 50%;
-      animation: blobFloat 12s ease-in-out infinite reverse;
-    }
-    @keyframes blobFloat {
-      0%,100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-30px) scale(1.05); }
-    }
+    /* PHILOSOPHY */
+    #philosophy { background:var(--paper2); }
+    .phil-layout { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+    .phil-left { padding:120px 80px; border-right:1px solid rgba(26,22,18,0.055); }
+    .phil-right { padding:120px 80px; }
+    .phil-intro { font-size:1.1rem; font-weight:400; line-height:1.8; color:var(--ink2); margin-top:40px; }
+    .principles { display:flex; flex-direction:column; gap:0; }
+    .principle { padding:36px 0; border-bottom:1px solid rgba(26,22,18,0.055); position:relative; cursor:default; }
+    .principle:first-child { border-top:1px solid rgba(26,22,18,0.055); }
+    .principle-header { display:flex; align-items:baseline; gap:20px; margin-bottom:12px; }
+    .principle-n { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--faint); flex-shrink:0; }
+    .principle-title { font-family:'Instrument Serif',serif; font-size:1.35rem; color:var(--ink); font-weight:400; }
+    .principle-body { font-size:0.92rem; font-weight:400; line-height:1.7; color:var(--ink2); padding-left:64px; }
+    .principle-mark { position:absolute; right:0; top:36px; font-family:'DM Mono',monospace; font-size:0.55rem; letter-spacing:0.1em; color:var(--accent); opacity:0.35; text-transform:uppercase; }
 
-    .hero-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem; font-weight: 500;
-      color: var(--azure); letter-spacing: 0.12em;
-      text-transform: uppercase;
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 24px;
-      opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards;
-    }
-    .hero-tag::before {
-      content: ''; display: block;
-      width: 32px; height: 1.5px; background: var(--azure);
-    }
-    .hero-dot {
-      display: inline-block; width: 7px; height: 7px;
-      background: #22C55E; border-radius: 50%;
-      box-shadow: 0 0 0 3px rgba(34,197,94,0.25);
-      animation: pulse 2s ease infinite;
-    }
-    @keyframes pulse {
-      0%,100% { box-shadow: 0 0 0 3px rgba(34,197,94,0.25); }
-      50% { box-shadow: 0 0 0 6px rgba(34,197,94,0.1); }
-    }
+    /* STACK */
+    #stack { background:var(--paper); }
+    .stack-wrap { padding:120px 80px; }
+    .stack-table { width:100%; border-collapse:collapse; }
+    .stack-group-header td { padding:22px 0 10px; font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--accent); border-top:2px solid var(--node-border); }
+    .stack-group-header:first-child td { border-top:none; }
+    .stack-row { border-bottom:1px solid rgba(26,22,18,0.025); }
+    .stack-row td { padding:16px 0; font-size:0.95rem; font-weight:400; color:var(--ink2); vertical-align:top; }
+    .stack-row td:first-child { width:240px; font-weight:600; color:var(--ink); }
+    .stack-row td:last-child { font-family:'DM Mono',monospace; font-size:0.75rem; color:var(--muted); letter-spacing:0.04em; }
 
-    .hero-name {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(3rem, 8vw, 6.5rem);
-      font-weight: 800;
-      line-height: 0.95;
-      letter-spacing: -0.04em;
-      color: var(--navy);
-      margin-bottom: 16px;
-      opacity: 0; animation: fadeUp 0.7s ease 0.35s forwards;
-    }
-    .hero-name .accent { color: var(--azure); }
+    /* DIAGRAM SECTION */
+    #diagram-section { background:var(--accent); padding:0; overflow:hidden; position:relative; }
+    .diagram-container { padding:80px; position:relative; }
+    .diagram-label { font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:rgba(242,237,228,0.45); margin-bottom:14px; }
+    .diagram-title { font-family:'Instrument Serif',serif; font-size:clamp(2rem,4vw,3.5rem); color:var(--paper); font-weight:400; line-height:1.1; margin-bottom:56px; }
+    .diagram-title em { font-style:italic; opacity:0.6; }
 
-    .hero-title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-      font-weight: 600; color: var(--muted);
-      letter-spacing: -0.01em;
-      margin-bottom: 28px;
-      opacity: 0; animation: fadeUp 0.7s ease 0.5s forwards;
-    }
+    /* CREDENTIALS */
+    #credentials { background:var(--paper3); }
+    .cred-layout { padding:120px 80px; display:grid; grid-template-columns:1fr 1fr; gap:0 120px; align-items:start; }
+    .cred-intro { font-size:1.05rem; font-weight:400; line-height:1.8; color:var(--ink2); margin-top:32px; }
+    .cred-list { display:flex; flex-direction:column; gap:0; }
+    .cred-entry { padding:32px 0; border-bottom:1px solid rgba(26,22,18,0.055); display:grid; grid-template-columns:1fr auto; gap:16px; align-items:start; }
+    .cred-entry:first-child { border-top:1px solid rgba(26,22,18,0.055); }
+    .cred-name { font-family:'Archivo',sans-serif; font-size:1rem; font-weight:600; color:var(--ink); margin-bottom:5px; }
+    .cred-org { font-size:0.88rem; font-weight:400; color:var(--muted); }
+    .cred-stamp { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; padding:6px 12px; white-space:nowrap; }
+    .stamp-active { color:var(--accent); border:1px solid var(--node-border); background:var(--node-bg); }
+    .stamp-progress { color:var(--muted); border:1px dashed var(--faint); }
 
-    .hero-desc {
-      max-width: 540px;
-      font-size: 1.05rem; font-weight: 300; line-height: 1.75;
-      color: var(--text); margin-bottom: 44px;
-      opacity: 0; animation: fadeUp 0.7s ease 0.65s forwards;
-    }
+    /* CONTACT */
+    #contact { background:var(--ink); position:relative; overflow:hidden; }
+    #contact .bp-grid { opacity:0.35; }
+    .contact-wrap { padding:120px 80px; display:grid; grid-template-columns:1fr 1fr; gap:0; position:relative; z-index:2; }
+    .contact-left { padding-right:80px; border-right:1px solid rgba(255,255,255,0.08); }
+    .contact-headline { font-family:'Instrument Serif',serif; font-size:clamp(3rem,6vw,5.5rem); font-weight:400; line-height:0.95; color:var(--paper); margin-top:24px; margin-bottom:40px; }
+    .contact-headline em { color:rgba(242,237,228,0.35); font-style:italic; }
+    .contact-sub { font-size:1rem; font-weight:400; line-height:1.75; color:rgba(242,237,228,0.5); max-width:380px; }
+    .contact-right { padding-left:80px; display:flex; flex-direction:column; justify-content:center; }
+    .contact-links { display:flex; flex-direction:column; gap:0; margin-top:32px; }
+    .contact-link { display:grid; grid-template-columns:1fr auto; align-items:center; padding:28px 0; border-bottom:1px solid rgba(255,255,255,0.06); text-decoration:none; transition:padding 0.2s,border-color 0.2s; }
+    .contact-link:first-child { border-top:1px solid rgba(255,255,255,0.06); }
+    .contact-link:hover { padding-left:14px; border-bottom-color:rgba(255,255,255,0.2); }
+    .cl-type { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.14em; text-transform:uppercase; color:rgba(242,237,228,0.3); margin-bottom:6px; }
+    .cl-val { font-size:1rem; font-weight:400; color:var(--paper); }
+    .cl-arr { font-size:1.5rem; color:rgba(242,237,228,0.25); transition:color 0.2s,transform 0.2s; }
+    .contact-link:hover .cl-arr { color:var(--paper); transform:translateX(4px); }
+    footer { background:var(--ink2); padding:26px 80px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.05); }
+    .foot-id { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.08em; color:rgba(255,255,255,0.2); }
+    .foot-tag { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.15); display:flex; align-items:center; gap:8px; }
+    .foot-tag::before { content:''; width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.15); }
+    .reveal { opacity:0; transform:translateY(20px); transition:opacity 0.65s ease,transform 0.65s ease; }
+    .reveal.visible { opacity:1; transform:none; }
 
-    .hero-cta {
-      display: flex; gap: 16px; flex-wrap: wrap;
-      opacity: 0; animation: fadeUp 0.7s ease 0.8s forwards;
+    @media(max-width:960px){
+      #hero{grid-template-columns:1fr;} .hero-right{display:none;} .hero-left{border-right:none;padding:120px 32px 80px;}
+      .phil-layout{grid-template-columns:1fr;} .phil-right{padding-top:0;}
+      .eng-flow{grid-template-columns:1fr;} .flow-arrow{display:none;}
+      .contact-wrap{grid-template-columns:1fr;} .contact-left{border-right:none;padding-right:0;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:60px;margin-bottom:60px;}
+      .contact-right{padding-left:0;} .cred-layout{grid-template-columns:1fr;gap:40px;}
+      nav{padding:0 24px;} .sec-wrap,.stack-wrap,.cred-layout,.diagram-container,.contact-wrap,footer{padding-left:32px;padding-right:32px;}
+      .engagement{grid-template-columns:1fr;gap:24px 0;padding:40px 0;}
     }
-
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px;
-      background: var(--navy);
-      color: var(--white);
-      font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.9rem;
-      letter-spacing: 0.02em;
-      text-decoration: none; border-radius: 4px;
-      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
-      box-shadow: 0 4px 20px rgba(11,29,58,0.18);
-    }
-    .btn-primary:hover {
-      background: var(--blue);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(30,64,175,0.25);
-    }
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px;
-      background: transparent;
-      color: var(--navy);
-      font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.9rem;
-      letter-spacing: 0.02em;
-      text-decoration: none; border-radius: 4px;
-      border: 1.5px solid var(--navy);
-      transition: all 0.25s;
-    }
-    .btn-secondary:hover {
-      background: var(--navy); color: var(--white);
-      transform: translateY(-2px);
-    }
-
-    .hero-stats {
-      position: absolute; right: 5vw; top: 50%;
-      transform: translateY(-50%);
-      display: flex; flex-direction: column; gap: 20px;
-      opacity: 0; animation: fadeLeft 0.8s ease 1s forwards;
-    }
-    .stat-card {
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 20px 24px;
-      text-align: right;
-      box-shadow: 0 2px 16px var(--glow);
-      transition: transform 0.25s, box-shadow 0.25s;
-    }
-    .stat-card:hover {
-      transform: translateX(-6px);
-      box-shadow: 0 8px 32px rgba(59,130,246,0.14);
-    }
-    .stat-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 2.2rem; font-weight: 800; color: var(--navy);
-      line-height: 1;
-    }
-    .stat-num span { color: var(--azure); }
-    .stat-label {
-      font-size: 0.75rem; font-weight: 500; color: var(--muted);
-      letter-spacing: 0.06em; text-transform: uppercase;
-      margin-top: 4px;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeLeft {
-      from { opacity: 0; transform: translateX(24px) translateY(-50%); }
-      to   { opacity: 1; transform: translateX(0)    translateY(-50%); }
-    }
-
-    /* ── Section base ───────────────────────────────── */
-    section { padding: 100px 5vw; }
-
-    .section-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem; font-weight: 500;
-      color: var(--azure); letter-spacing: 0.14em;
-      text-transform: uppercase;
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 14px;
-    }
-    .section-tag::before {
-      content: ''; display: block;
-      width: 24px; height: 1.5px; background: var(--azure);
-    }
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 800; color: var(--navy);
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 60px;
-    }
-
-    /* ── About ────────────────────────────────────────── */
-    #about { background: var(--navy); color: var(--white); position: relative; overflow: hidden; }
-    #about .section-tag { color: var(--azure); }
-    #about .section-tag::before { background: var(--azure); }
-    #about .section-title { color: var(--white); margin-bottom: 0; }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px; align-items: center;
-    }
-    .about-text p {
-      font-size: 1.05rem; font-weight: 300; line-height: 1.85;
-      color: rgba(248,250,255,0.80);
-      margin-top: 32px;
-    }
-    .about-text p + p { margin-top: 20px; }
-    .about-text strong { color: var(--white); font-weight: 500; }
-
-    .about-right { display: flex; flex-direction: column; gap: 16px; }
-    .about-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; padding: 22px 26px;
-      display: flex; align-items: flex-start; gap: 16px;
-      transition: background 0.25s, border-color 0.25s;
-    }
-    .about-card:hover {
-      background: rgba(59,130,246,0.12);
-      border-color: rgba(59,130,246,0.35);
-    }
-    .about-card-icon {
-      width: 38px; height: 38px; flex-shrink: 0;
-      background: rgba(59,130,246,0.15);
-      border-radius: 6px;
-      display: grid; place-items: center;
-      font-size: 1.2rem;
-    }
-    .about-card-text strong {
-      display: block; font-family: 'Syne', sans-serif;
-      font-size: 0.95rem; font-weight: 700; color: var(--white);
-      margin-bottom: 4px;
-    }
-    .about-card-text span {
-      font-size: 0.83rem; color: rgba(248,250,255,0.55); font-weight: 300;
-    }
-
-    .about-noise {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      opacity: 0.6;
-    }
-
-    /* ── Experience ──────────────────────────────────── */
-    #experience { background: var(--white); }
-
-    .timeline { position: relative; padding-left: 32px; }
-    .timeline::before {
-      content: ''; position: absolute;
-      left: 0; top: 10px; bottom: 10px;
-      width: 1.5px; background: var(--line);
-    }
-
-    .timeline-item {
-      position: relative; margin-bottom: 60px;
-      opacity: 0; transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .timeline-item.visible { opacity: 1; transform: translateY(0); }
-
-    .timeline-dot {
-      position: absolute; left: -38px; top: 6px;
-      width: 14px; height: 14px; border-radius: 50%;
-      background: var(--white); border: 2px solid var(--azure);
-      box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
-    }
-    .timeline-dot.active { background: var(--azure); }
-
-    .timeline-company {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.25rem; font-weight: 700; color: var(--navy);
-      letter-spacing: -0.02em;
-    }
-    .timeline-period {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem; color: var(--azure); letter-spacing: 0.06em;
-      margin: 6px 0 4px;
-    }
-    .timeline-location {
-      font-size: 0.82rem; color: var(--muted); margin-bottom: 16px;
-    }
-
-    .role-block { margin-bottom: 24px; }
-    .role-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem; font-weight: 600; color: var(--blue);
-      margin-bottom: 4px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .role-dates {
-      font-size: 0.78rem; color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-      margin-bottom: 12px;
-    }
-    .promoted-badge {
-      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em;
-      text-transform: uppercase; color: #15803D;
-      background: #DCFCE7; padding: 2px 8px; border-radius: 20px;
-    }
-
-    .timeline-bullets { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .timeline-bullets li {
-      font-size: 0.92rem; font-weight: 300; line-height: 1.7;
-      color: var(--text); padding-left: 16px; position: relative;
-    }
-    .timeline-bullets li::before {
-      content: ''; position: absolute; left: 0; top: 11px;
-      width: 5px; height: 1.5px; background: var(--azure);
-    }
-    .timeline-bullets li strong { font-weight: 500; color: var(--navy); }
-
-    /* ── Skills ──────────────────────────────────────── */
-    #skills { background: var(--off); }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .skill-card {
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 10px; padding: 28px;
-      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
-      opacity: 0; transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s, border-color 0.3s;
-    }
-    .skill-card.visible { opacity: 1; transform: translateY(0); }
-    .skill-card:hover {
-      box-shadow: 0 12px 40px rgba(59,130,246,0.12);
-      border-color: rgba(59,130,246,0.35);
-      transform: translateY(-4px);
-    }
-    .skill-card-header {
-      display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
-    }
-    .skill-icon {
-      width: 40px; height: 40px;
-      background: var(--ice); border-radius: 8px;
-      display: grid; place-items: center; font-size: 1.3rem; flex-shrink: 0;
-    }
-    .skill-card-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem; font-weight: 700; color: var(--navy);
-    }
-    .skill-tags {
-      display: flex; flex-wrap: wrap; gap: 7px;
-    }
-    .skill-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem; font-weight: 500;
-      color: var(--blue); background: var(--ice);
-      padding: 4px 10px; border-radius: 3px;
-      letter-spacing: 0.02em;
-    }
-
-    /* ── Cert & Education ─────────────────────────────── */
-    #credentials { background: var(--white); }
-    .cred-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
-    }
-    .cred-card {
-      border: 1px solid var(--line); border-radius: 10px;
-      padding: 32px; position: relative; overflow: hidden;
-      transition: transform 0.25s, box-shadow 0.25s;
-    }
-    .cred-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px var(--glow);
-    }
-    .cred-card::before {
-      content: ''; position: absolute; top: 0; left: 0;
-      width: 4px; height: 100%; background: var(--azure);
-      border-radius: 4px 0 0 4px;
-    }
-    .cred-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--azure);
-      background: var(--ice); padding: 4px 10px; border-radius: 20px;
-      margin-bottom: 16px;
-    }
-    .cred-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.15rem; font-weight: 700; color: var(--navy);
-      margin-bottom: 8px; line-height: 1.3;
-    }
-    .cred-sub { font-size: 0.88rem; color: var(--muted); font-weight: 300; }
-    .cred-year {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem; color: var(--azure); margin-top: 14px;
-      letter-spacing: 0.06em;
-    }
-
-    /* ── Contact ──────────────────────────────────────── */
-    #contact {
-      background: var(--navy); color: var(--white);
-      text-align: center; position: relative; overflow: hidden;
-    }
-    #contact .section-tag { color: var(--azure); justify-content: center; }
-    #contact .section-tag::before { background: var(--azure); }
-    #contact .section-title { color: var(--white); text-align: center; }
-
-    .contact-sub {
-      font-size: 1.05rem; font-weight: 300;
-      color: rgba(248,250,255,0.65); max-width: 480px;
-      margin: -40px auto 48px; line-height: 1.8;
-    }
-    .contact-links {
-      display: flex; justify-content: center;
-      flex-wrap: wrap; gap: 16px;
-    }
-    .contact-link {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 14px 26px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.14);
-      color: var(--white); text-decoration: none;
-      font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.88rem;
-      border-radius: 4px; letter-spacing: 0.03em;
-      transition: background 0.25s, border-color 0.25s, transform 0.2s;
-    }
-    .contact-link:hover {
-      background: rgba(59,130,246,0.25);
-      border-color: rgba(59,130,246,0.5);
-      transform: translateY(-2px);
-    }
-    .contact-link svg { width: 18px; height: 18px; }
-
-    /* ── Footer ──────────────────────────────────────── */
-    footer {
-      background: #070F1F;
-      padding: 28px 5vw;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 12px;
-    }
-    footer p { font-size: 0.78rem; color: rgba(248,250,255,0.3); }
-    .footer-mono {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem; color: rgba(59,130,246,0.55);
-    }
-
-    /* ── Scroll reveal ───────────────────────────────── */
-    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* ── Responsive ──────────────────────────────────── */
-    @media (max-width: 900px) {
-      .hero-stats { display: none; }
-      .about-grid { grid-template-columns: 1fr; gap: 40px; }
-      .cred-grid { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 640px) {
-      .nav-links { display: none; }
-      section { padding: 70px 5vw; }
+    @media(max-width:600px){
+      .nav-links{display:none;} .sec-wrap{padding:80px 24px;}
+      .eng-outcomes{flex-direction:column;gap:24px;} .outcome{border-right:none;padding-right:0;margin-right:0;}
+      .phil-left,.phil-right{padding:80px 24px;}
     }
   </style>
 </head>
 <body>
+<div id="cur"></div>
+<div id="cur-cross"></div>
 
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark"></div>
+    <span class="nav-logo-text">SD · Arch</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#engagements">Work</a></li>
+    <li><a href="#philosophy">Principles</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">Mumbai · ap-south-1</div>
+</nav>
 
-  <!-- NAV -->
-  <nav id="navbar">
-    <a href="#hero" class="nav-logo">SD<span>.</span></a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#credentials">Credentials</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
-
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-grid"></div>
-    <div class="hero-blob"></div>
-    <div class="hero-blob2"></div>
-
-    <div class="hero-tag">
-      <span class="hero-dot"></span>
-      Available for senior roles &amp; consulting
-    </div>
-    <h1 class="hero-name">Shubham<br>Dongar<span class="accent">war</span></h1>
-    <p class="hero-title">Senior Solution Architect &nbsp;·&nbsp; AWS Certified SA Associate</p>
-    <p class="hero-desc">
-      I design enterprise cloud infrastructure that doesn't fail. Specialising in
-      High Availability, Disaster Recovery, and Cloud Migration — for banking and
-      enterprise clients where downtime is not an option.
-    </p>
+<!-- HERO -->
+<section id="hero">
+  <div class="bp-grid"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow"><span class="dot"></span>Senior Solutions Architect · AWS Certified</div>
+    <h1 class="hero-name">Shubham<br><em>Dongarwar</em></h1>
+    <p class="hero-role">Core5 Systems &amp; Services &nbsp;·&nbsp; Mumbai, India</p>
+    <p class="hero-thesis">I design systems for organisations where failure is not a tolerable outcome. Cloud infrastructure built around the assumption that things break — and engineered so that users never notice when they do.</p>
     <div class="hero-cta">
-      <a href="#experience" class="btn-primary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-        View My Work
-      </a>
-      <a href="#contact" class="btn-secondary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-        Get In Touch
-      </a>
+      <a href="#engagements" class="btn-blueprint">View Engagements</a>
+      <a href="#contact" class="btn-outline">Contact</a>
     </div>
-
-    <div class="hero-stats">
-      <div class="stat-card">
-        <div class="stat-num">35<span>%</span></div>
-        <div class="stat-label">Cost Reduction</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">99.95<span>%</span></div>
-        <div class="stat-label">Uptime Achieved</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">&lt;15<span>m</span></div>
-        <div class="stat-label">RTO Delivered</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">3<span>+</span></div>
-        <div class="stat-label">Years Enterprise Delivery</div>
-      </div>
+    <div class="hero-callout">
+      <div class="callout-stat"><div class="callout-num">99.95%</div><div class="callout-label">SLA Delivered</div></div>
+      <div class="callout-stat"><div class="callout-num">&#8377;40L+</div><div class="callout-label">Cost Saved</div></div>
+      <div class="callout-stat"><div class="callout-num">&lt;15m</div><div class="callout-label">RTO Achieved</div></div>
     </div>
-  </section>
+  </div>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="about-noise"></div>
-    <div class="about-grid">
-      <div class="about-text reveal">
-        <div class="section-tag">About Me</div>
-        <h2 class="section-title" style="margin-bottom:0">I build cloud<br>infrastructure<br>that holds.</h2>
-        <p>
-          I'm a <strong>Senior Solution Architect</strong> at Core5 Systems, Mumbai — promoted within 7 months for delivering
-          production-grade AWS environments for banking and enterprise clients. Every architecture
-          I ship has been through real load testing, chaos engineering, and live failover validation.
-        </p>
-        <p>
-          Before Core5, I spent two years as an independent consultant — which means I've owned
-          <strong>scope, design, build, and support</strong> with no escalation path. That experience
-          made me a more decisive, commercially-aware architect.
-        </p>
-        <p>
-          Currently exploring the <strong>AWS Solutions Architect Professional</strong> certification
-          to deepen my strategic architecture credentials.
-        </p>
+  <!-- AWS ARCHITECTURE DIAGRAM with real-style service icons -->
+  <div class="hero-right">
+    <div class="bp-grid"></div>
+    <svg class="arch-canvas" viewBox="0 0 580 740" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0.5 L6,3.5 L0,6.5 Z" fill="#1A3A5C" opacity="0.7"/></marker>
+        <marker id="arr2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0.5 L6,3.5 L0,6.5 Z" fill="#1A3A5C" opacity="0.4"/></marker>
+        <marker id="arrd" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0.5 L6,3.5 L0,6.5 Z" fill="#C0392B" opacity="0.6"/></marker>
+      </defs>
+
+      <!-- Blueprint reference lines -->
+      <line x1="290" y1="0" x2="290" y2="740" stroke="#1A1612" stroke-width="0.5" opacity="0.06" stroke-dasharray="4,8"/>
+
+      <!-- ===== INTERNET / USERS ===== -->
+      <g transform="translate(228,30)">
+        <!-- Users icon (circle with person silhouette) -->
+        <rect x="0" y="0" width="124" height="52" rx="2" fill="rgba(26,58,92,0.06)" stroke="rgba(26,58,92,0.4)" stroke-width="1.2"/>
+        <!-- Globe icon -->
+        <circle cx="22" cy="26" r="12" fill="none" stroke="#1A3A5C" stroke-width="1.2" opacity="0.7"/>
+        <ellipse cx="22" cy="26" rx="6" ry="12" fill="none" stroke="#1A3A5C" stroke-width="1" opacity="0.5"/>
+        <line x1="10" y1="26" x2="34" y2="26" stroke="#1A3A5C" stroke-width="1" opacity="0.5"/>
+        <text x="42" y="22" font-family="DM Mono,monospace" font-size="7.5" fill="#1A3A5C" font-weight="500" letter-spacing="1">INTERNET</text>
+        <text x="42" y="35" font-family="DM Mono,monospace" font-size="6" fill="#4A3F32">End users · 99.95% SLA</text>
+      </g>
+
+      <!-- Arrow: Internet → Route53 -->
+      <line x1="290" y1="82" x2="290" y2="108" stroke="#1A3A5C" stroke-width="1.5" opacity="0.5" marker-end="url(#arr)"/>
+
+      <!-- ===== ROUTE 53 ===== -->
+      <g transform="translate(168,108)">
+        <rect x="0" y="0" width="244" height="56" rx="2" fill="rgba(26,58,92,0.08)" stroke="rgba(26,58,92,0.55)" stroke-width="1.5"/>
+        <!-- Route 53 icon (circle with cross) -->
+        <circle cx="24" cy="28" r="13" fill="rgba(131,56,236,0.12)" stroke="#8338EC" stroke-width="1.2" opacity="0.7"/>
+        <text x="18" y="32" font-family="DM Mono,monospace" font-size="7" fill="#8338EC" opacity="0.9" font-weight="500">R53</text>
+        <text x="46" y="24" font-family="DM Mono,monospace" font-size="7.5" fill="#1A3A5C" font-weight="500" letter-spacing="1">ROUTE 53</text>
+        <text x="46" y="38" font-family="DM Mono,monospace" font-size="6" fill="#4A3F32">Failover routing · Health checks</text>
+      </g>
+
+      <!-- Arrow: R53 → ALB Primary -->
+      <line x1="230" y1="164" x2="155" y2="196" stroke="#1A3A5C" stroke-width="1.5" opacity="0.6" marker-end="url(#arr)"/>
+      <!-- Arrow: R53 → DR (dashed) -->
+      <line x1="350" y1="164" x2="425" y2="196" stroke="#1A3A5C" stroke-width="1" opacity="0.3" stroke-dasharray="5,4" marker-end="url(#arr2)"/>
+
+      <!-- AUTO-FAILOVER label -->
+      <text x="352" y="182" font-family="DM Mono,monospace" font-size="6" fill="#C0392B" opacity="0.8" letter-spacing="1">AUTO-FAILOVER</text>
+      <line x1="350" y1="184" x2="370" y2="190" stroke="#C0392B" stroke-width="0.8" opacity="0.5"/>
+
+      <!-- ======= PRIMARY REGION ======= -->
+      <rect x="32" y="190" width="242" height="320" rx="2" fill="rgba(26,58,92,0.04)" stroke="#1A3A5C" stroke-width="1.5" stroke-dasharray="8,4" opacity="0.85"/>
+      <text x="44" y="180" font-family="DM Mono,monospace" font-size="7.5" fill="#1A3A5C" opacity="0.9" letter-spacing="1.5" font-weight="500">PRIMARY · ap-south-1a</text>
+
+      <!-- ALB -->
+      <g transform="translate(52,205)">
+        <rect x="0" y="0" width="202" height="50" rx="2" fill="rgba(26,58,92,0.09)" stroke="rgba(26,58,92,0.5)" stroke-width="1.2"/>
+        <!-- ALB icon (load balancer shape) -->
+        <rect x="8" y="12" width="18" height="14" rx="1" fill="rgba(255,153,0,0.2)" stroke="#FF9900" stroke-width="1.2" opacity="0.8"/>
+        <line x1="17" y1="26" x2="12" y2="32" stroke="#FF9900" stroke-width="1" opacity="0.7"/>
+        <line x1="17" y1="26" x2="22" y2="32" stroke="#FF9900" stroke-width="1" opacity="0.7"/>
+        <text x="34" y="22" font-family="DM Mono,monospace" font-size="7" fill="#1A3A5C" font-weight="500" letter-spacing="1">ALB</text>
+        <text x="34" y="35" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32">Application Load Balancer</text>
+      </g>
+
+      <!-- Arrow: ALB → EC2 -->
+      <line x1="153" y1="255" x2="153" y2="277" stroke="#1A3A5C" stroke-width="1" opacity="0.45" marker-end="url(#arr2)"/>
+
+      <!-- EC2 Auto Scaling -->
+      <g transform="translate(52,277)">
+        <rect x="0" y="0" width="202" height="60" rx="2" fill="rgba(26,58,92,0.09)" stroke="rgba(26,58,92,0.5)" stroke-width="1.2"/>
+        <!-- EC2 icon -->
+        <rect x="8" y="10" width="18" height="18" rx="1" fill="rgba(255,153,0,0.15)" stroke="#FF9900" stroke-width="1.2" opacity="0.8"/>
+        <rect x="11" y="13" width="12" height="12" rx="0.5" fill="rgba(255,153,0,0.2)"/>
+        <rect x="7" y="16" width="4" height="3" rx="0.5" fill="#FF9900" opacity="0.6"/>
+        <rect x="27" y="16" width="4" height="3" rx="0.5" fill="#FF9900" opacity="0.6"/>
+        <text x="34" y="24" font-family="DM Mono,monospace" font-size="7" fill="#1A3A5C" font-weight="500" letter-spacing="1">EC2 AUTO SCALING</text>
+        <text x="34" y="37" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32">min:2 · max:10 · desired:4</text>
+        <text x="34" y="49" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32">Multi-AZ spread</text>
+      </g>
+
+      <!-- Arrow: EC2 → RDS -->
+      <line x1="153" y1="337" x2="153" y2="359" stroke="#1A3A5C" stroke-width="1" opacity="0.45" marker-end="url(#arr2)"/>
+
+      <!-- RDS Multi-AZ -->
+      <g transform="translate(52,359)">
+        <rect x="0" y="0" width="202" height="60" rx="2" fill="rgba(26,58,92,0.09)" stroke="rgba(26,58,92,0.5)" stroke-width="1.2"/>
+        <!-- RDS icon (cylinder) -->
+        <ellipse cx="17" cy="16" rx="9" ry="4" fill="rgba(43,117,185,0.2)" stroke="#2B75B9" stroke-width="1.2" opacity="0.8"/>
+        <rect x="8" y="16" width="18" height="14" fill="rgba(43,117,185,0.12)" stroke="#2B75B9" stroke-width="1.2" opacity="0.7"/>
+        <ellipse cx="17" cy="30" rx="9" ry="4" fill="rgba(43,117,185,0.15)" stroke="#2B75B9" stroke-width="1.2" opacity="0.8"/>
+        <text x="34" y="24" font-family="DM Mono,monospace" font-size="7" fill="#1A3A5C" font-weight="500" letter-spacing="1">RDS · MULTI-AZ</text>
+        <text x="34" y="37" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32">Aurora PostgreSQL</text>
+        <text x="34" y="49" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32">Auto failover · Encrypted</text>
+      </g>
+
+      <!-- Arrow: RDS → S3 -->
+      <line x1="153" y1="419" x2="153" y2="441" stroke="#1A3A5C" stroke-width="1" opacity="0.45" marker-end="url(#arr2)"/>
+
+      <!-- S3 + CloudFront -->
+      <g transform="translate(52,441)">
+        <rect x="0" y="0" width="202" height="56" rx="2" fill="rgba(26,58,92,0.09)" stroke="rgba(26,58,92,0.5)" stroke-width="1.2"/>
+        <!-- S3 icon (bucket shape) -->
+        <rect x="8" y="10" width="18" height="16" rx="1" fill="rgba(93,156,89,0.2)" stroke="#569A31" stroke-width="1.2" opacity="0.8"/>
+        <ellipse cx="17" cy="10" rx="9" ry="3" fill="rgba(93,156,89,0.25)" stroke="#569A31" stroke-width="1" opacity="0.8"/>
+        <text x="34" y="24" font-family="DM Mono,monospace" font-size="7" fill="#1A3A5C" font-weight="500" letter-spacing="1">S3 + CLOUDFRONT</text>
+        <text x="34" y="37" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32">Static assets · CDN · Edge</text>
+        <text x="34" y="48" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32">Cross-region replication</text>
+      </g>
+
+      <!-- ======= DR REGION ======= -->
+      <rect x="306" y="190" width="242" height="320" rx="2" fill="rgba(26,58,92,0.02)" stroke="#1A3A5C" stroke-width="1.2" stroke-dasharray="4,8" opacity="0.5"/>
+      <text x="318" y="180" font-family="DM Mono,monospace" font-size="7.5" fill="#1A3A5C" opacity="0.55" letter-spacing="1.5">DR · ap-south-1b</text>
+
+      <!-- DR ALB (standby) -->
+      <g transform="translate(326,205)">
+        <rect x="0" y="0" width="202" height="50" rx="2" fill="rgba(26,58,92,0.04)" stroke="rgba(26,58,92,0.22)" stroke-width="1" stroke-dasharray="4,3"/>
+        <rect x="8" y="12" width="18" height="14" rx="1" fill="rgba(255,153,0,0.08)" stroke="#FF9900" stroke-width="1" opacity="0.45"/>
+        <text x="34" y="22" font-family="DM Mono,monospace" font-size="7" fill="#1A3A5C" opacity="0.5" letter-spacing="1">ALB · STANDBY</text>
+        <text x="34" y="35" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32" opacity="0.6">Warm standby · Ready</text>
+      </g>
+
+      <!-- DR EC2 -->
+      <g transform="translate(326,277)">
+        <rect x="0" y="0" width="202" height="60" rx="2" fill="rgba(26,58,92,0.04)" stroke="rgba(26,58,92,0.22)" stroke-width="1" stroke-dasharray="4,3"/>
+        <rect x="8" y="10" width="18" height="18" rx="1" fill="rgba(255,153,0,0.08)" stroke="#FF9900" stroke-width="1" opacity="0.45"/>
+        <text x="34" y="24" font-family="DM Mono,monospace" font-size="7" fill="#1A3A5C" opacity="0.5" letter-spacing="1">EC2 · WARM STANDBY</text>
+        <text x="34" y="37" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32" opacity="0.6">RTO &lt;15m · RPO &lt;30m</text>
+      </g>
+
+      <!-- DR RDS -->
+      <g transform="translate(326,359)">
+        <rect x="0" y="0" width="202" height="60" rx="2" fill="rgba(26,58,92,0.04)" stroke="rgba(26,58,92,0.22)" stroke-width="1" stroke-dasharray="4,3"/>
+        <ellipse cx="17" cy="16" rx="9" ry="4" fill="rgba(43,117,185,0.07)" stroke="#2B75B9" stroke-width="1" opacity="0.5"/>
+        <rect x="8" y="16" width="18" height="14" fill="rgba(43,117,185,0.05)" stroke="#2B75B9" stroke-width="1" opacity="0.5"/>
+        <ellipse cx="17" cy="30" rx="9" ry="4" fill="rgba(43,117,185,0.07)" stroke="#2B75B9" stroke-width="1" opacity="0.5"/>
+        <text x="34" y="24" font-family="DM Mono,monospace" font-size="7" fill="#1A3A5C" opacity="0.5" letter-spacing="1">RDS READ REPLICA</text>
+        <text x="34" y="37" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32" opacity="0.6">Sync replication from primary</text>
+      </g>
+
+      <!-- DR S3 -->
+      <g transform="translate(326,441)">
+        <rect x="0" y="0" width="202" height="56" rx="2" fill="rgba(26,58,92,0.04)" stroke="rgba(26,58,92,0.22)" stroke-width="1" stroke-dasharray="4,3"/>
+        <rect x="8" y="10" width="18" height="16" rx="1" fill="rgba(93,156,89,0.07)" stroke="#569A31" stroke-width="1" opacity="0.5"/>
+        <ellipse cx="17" cy="10" rx="9" ry="3" fill="rgba(93,156,89,0.1)" stroke="#569A31" stroke-width="1" opacity="0.5"/>
+        <text x="34" y="24" font-family="DM Mono,monospace" font-size="7" fill="#1A3A5C" opacity="0.5" letter-spacing="1">S3 REPLICA</text>
+        <text x="34" y="37" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32" opacity="0.6">CRR enabled · Versioned</text>
+      </g>
+
+      <!-- Replication arrows: primary → dr -->
+      <line x1="254" y1="230" x2="326" y2="230" stroke="#1A3A5C" stroke-width="1" stroke-dasharray="3,5" opacity="0.35" marker-end="url(#arr2)"/>
+      <line x1="254" y1="307" x2="326" y2="307" stroke="#1A3A5C" stroke-width="1" stroke-dasharray="3,5" opacity="0.35" marker-end="url(#arr2)"/>
+      <line x1="254" y1="389" x2="326" y2="389" stroke="#1A3A5C" stroke-width="1" stroke-dasharray="3,5" opacity="0.35" marker-end="url(#arr2)"/>
+      <line x1="254" y1="469" x2="326" y2="469" stroke="#1A3A5C" stroke-width="1" stroke-dasharray="3,5" opacity="0.35" marker-end="url(#arr2)"/>
+      <text x="266" y="260" font-family="DM Mono,monospace" font-size="5.5" fill="#1A3A5C" opacity="0.45" text-anchor="middle" letter-spacing="0.5">SYNC</text>
+      <text x="266" y="340" font-family="DM Mono,monospace" font-size="5.5" fill="#1A3A5C" opacity="0.45" text-anchor="middle" letter-spacing="0.5">REPLICATE</text>
+
+      <!-- CloudWatch + GuardDuty strip -->
+      <g transform="translate(52,530)">
+        <rect x="0" y="0" width="490" height="44" rx="2" fill="rgba(26,58,92,0.06)" stroke="rgba(26,58,92,0.35)" stroke-width="1"/>
+        <!-- CloudWatch icon -->
+        <circle cx="18" cy="22" r="10" fill="rgba(232,72,85,0.12)" stroke="#E84855" stroke-width="1.2" opacity="0.75"/>
+        <polyline points="10,24 14,19 18,25 22,16 26,22" fill="none" stroke="#E84855" stroke-width="1" opacity="0.75"/>
+        <text x="36" y="18" font-family="DM Mono,monospace" font-size="6.5" fill="#1A3A5C" font-weight="500" letter-spacing="0.8">CLOUDWATCH · GUARDDUTY · CLOUDTRAIL · IAM · KMS</text>
+        <text x="36" y="31" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32">Monitoring · Threat detection · Audit · Identity · Encryption</text>
+      </g>
+
+      <!-- Blueprint annotation -->
+      <text x="32" y="650" font-family="DM Mono,monospace" font-size="6" fill="#4A3F32" opacity="0.65" letter-spacing="0.8">DRAWING: SD-DR-001 · REV 3.2 · S. DONGARWAR · CORE5 SYSTEMS</text>
+
+      <!-- Title block -->
+      <rect x="370" y="660" width="180" height="60" fill="none" stroke="rgba(26,58,92,0.25)" stroke-width="1"/>
+      <line x1="370" y1="678" x2="550" y2="678" stroke="rgba(26,58,92,0.15)" stroke-width="0.5"/>
+      <text x="380" y="673" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32" opacity="0.5" letter-spacing="1">TITLE</text>
+      <text x="380" y="691" font-family="DM Mono,monospace" font-size="7" fill="#1A3A5C" opacity="0.85" letter-spacing="0.8">HA/DR ARCHITECTURE</text>
+      <text x="380" y="704" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32" opacity="0.6">Multi-AZ · Active-Passive · AWS</text>
+      <text x="380" y="715" font-family="DM Mono,monospace" font-size="5.5" fill="#4A3F32" opacity="0.45">2025 · ap-south-1</text>
+
+      <!-- Corner marks -->
+      <rect x="18" y="18" width="10" height="10" fill="none" stroke="#1A3A5C" stroke-width="1" opacity="0.35"/>
+      <rect x="552" y="18" width="10" height="10" fill="none" stroke="#1A3A5C" stroke-width="1" opacity="0.35"/>
+      <rect x="18" y="712" width="10" height="10" fill="none" stroke="#1A3A5C" stroke-width="1" opacity="0.35"/>
+      <rect x="552" y="712" width="10" height="10" fill="none" stroke="#1A3A5C" stroke-width="1" opacity="0.35"/>
+    </svg>
+  </div>
+</section>
+
+<!-- PROOF BAND -->
+<div id="proof">
+  <div class="proof-scroller">
+    <div style="display:flex">
+      <div class="proof-stat"><span class="proof-num">99.95%</span><span class="proof-label">Uptime SLA Delivered</span></div>
+      <div class="proof-stat"><span class="proof-num">35%</span><span class="proof-label">Cloud Cost Reduction</span></div>
+      <div class="proof-stat"><span class="proof-num">&#8377;40L+</span><span class="proof-label">Annual Savings Engineered</span></div>
+      <div class="proof-stat"><span class="proof-num">&lt;15m</span><span class="proof-label">RTO Achieved in Testing</span></div>
+      <div class="proof-stat"><span class="proof-num">3&times;</span><span class="proof-label">Infrastructure Scale Factor</span></div>
+      <div class="proof-stat"><span class="proof-num">150TB</span><span class="proof-label">Data Migrated Zero Loss</span></div>
+      <div class="proof-stat"><span class="proof-num">0</span><span class="proof-label">Unplanned Outages on Watch</span></div>
+    </div>
+    <div style="display:flex" aria-hidden="true">
+      <div class="proof-stat"><span class="proof-num">99.95%</span><span class="proof-label">Uptime SLA Delivered</span></div>
+      <div class="proof-stat"><span class="proof-num">35%</span><span class="proof-label">Cloud Cost Reduction</span></div>
+      <div class="proof-stat"><span class="proof-num">&#8377;40L+</span><span class="proof-label">Annual Savings Engineered</span></div>
+      <div class="proof-stat"><span class="proof-num">&lt;15m</span><span class="proof-label">RTO Achieved in Testing</span></div>
+      <div class="proof-stat"><span class="proof-num">3&times;</span><span class="proof-label">Infrastructure Scale Factor</span></div>
+      <div class="proof-stat"><span class="proof-num">150TB</span><span class="proof-label">Data Migrated Zero Loss</span></div>
+      <div class="proof-stat"><span class="proof-num">0</span><span class="proof-label">Unplanned Outages on Watch</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ENGAGEMENTS -->
+<section id="engagements">
+  <div class="bp-grid"></div>
+  <div class="sec-wrap">
+    <div class="sec-tag reveal">Selected Engagements</div>
+    <h2 class="sec-heading reveal">Systems I've<br>been <em>responsible for</em></h2>
+
+    <!-- 01 -->
+    <div class="engagement reveal">
+      <div class="eng-meta">
+        <span class="eng-num">01</span>
+        <div class="eng-date">Core5 · 2025</div>
+        <div class="eng-client">Healthcare &amp; Manufacturing</div>
       </div>
-      <div class="about-right reveal" style="transition-delay:0.15s">
-        <div class="about-card">
-          <div class="about-card-icon">🏦</div>
-          <div class="about-card-text">
-            <strong>Banking & Enterprise Focus</strong>
-            <span>Regulated environments where compliance and uptime are non-negotiable</span>
-          </div>
+      <div class="eng-body">
+        <div class="eng-sector">SAP HA/DR · Private Sector </div>
+        <h3 class="eng-title">SAP HA/DR Architecture for Core Manufacturing Operations</h3>
+        <div class="eng-services"><span class="svc-tag">AWS MGN</span><span class="svc-tag">EC2</span><span class="svc-tag">EBS</span><span class="svc-tag">Route 53</span><span class="svc-tag">DR Strategy</span></div>
+        <div class="eng-flow">
+          <div class="flow-node" data-label="// Context"><p>A regional private bank running SAP on-premise with no tested DR plan. A single datacentre failure would halt all transaction processing. No documented RTO, no runbook, regulatory audit imminent.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Approach"><p>Designed HA/DR for SAP workload handling 1TB+ production data on AWS. Implemented active-passive multi-AZ with Route 53 health-check failover and automated runbook execution. Pre/post validation gates at every migration wave.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Outcome"><p>Achieved RTO &lt;15 minutes and RPO &lt;5 minutes on first DR drill. Regulatory audit satisfied. Recovery time improved by 80%. System operating at 99.95% SLA.</p></div>
         </div>
-        <div class="about-card">
-          <div class="about-card-icon">☁️</div>
-          <div class="about-card-text">
-            <strong>AWS Migration Specialist</strong>
-            <span>Hands-on with AWS MGN, DMS, and DataSync for live production migrations</span>
-          </div>
-        </div>
-        <div class="about-card">
-          <div class="about-card-icon">📐</div>
-          <div class="about-card-text">
-            <strong>End-to-End Ownership</strong>
-            <span>HLD/LLD design through to deployment, validation, and client handover</span>
-          </div>
-        </div>
-        <div class="about-card">
-          <div class="about-card-icon">⚡</div>
-          <div class="about-card-text">
-            <strong>DevOps-Native Architect</strong>
-            <span>CI/CD pipelines, Docker, Jenkins — architecture that ships daily, not quarterly</span>
-          </div>
-        </div>
-        <div class="about-card">
-          <div class="about-card-icon">📍</div>
-          <div class="about-card-text">
-            <strong>Mumbai, India</strong>
-            <span>Open to hybrid and remote senior roles globally</span>
-          </div>
+        <div class="eng-outcomes">
+          <div class="outcome"><div class="out-val">&lt;15m</div><div class="out-label">RTO Achieved</div></div>
+          <div class="outcome"><div class="out-val">&lt;5m</div><div class="out-label">RPO Achieved</div></div>
+          <div class="outcome"><div class="out-val">80%</div><div class="out-label">Recovery Time Improved</div></div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- EXPERIENCE -->
-  <section id="experience">
-    <div class="section-tag reveal">Experience</div>
-    <h2 class="section-title reveal">Where I've Delivered</h2>
-
-    <div class="timeline">
-
-      <!-- Core5 -->
-      <div class="timeline-item">
-        <div class="timeline-dot active"></div>
-        <div class="timeline-company">Core5 Systems & Services Pvt Ltd</div>
-        <div class="timeline-period">JAN 2025 — PRESENT</div>
-        <div class="timeline-location">📍 Mumbai, India</div>
-
-        <div class="role-block">
-          <div class="role-title">
-            Senior Solution Architect
-            <span class="promoted-badge">↑ Promoted</span>
-          </div>
-          <div class="role-dates">AUG 2025 — PRESENT</div>
-          <ul class="timeline-bullets">
-            <li>Promoted within <strong>7 months</strong> for delivering mission-critical AWS infrastructure for banking and enterprise clients — recognised for architecture quality and zero post-handover P1 incidents.</li>
-            <li>Played a key role in <strong>AWS cloud migration projects</strong> (~40–50% ownership) — covering rehost/replatform strategy, dependency mapping, cutover planning, and post-migration validation using <strong>AWS MGN, DMS, and DataSync</strong>.</li>
-            <li>Designed and executed cutover plans with downtime minimisation strategies; led post-migration validation including performance benchmarking and data integrity verification.</li>
-            <li>Authored technical bid responses for <strong>₹2Cr+ tenders</strong>, contributing directly to enterprise contract wins through compliance-grade documentation.</li>
-            <li>Mentor junior architects on AWS best practices, secure design patterns, and operational reliability standards.</li>
-          </ul>
+    <!-- 02 -->
+    <div class="engagement reveal">
+      <div class="eng-meta">
+        <span class="eng-num">02</span>
+        <div class="eng-date">Core5 · 2025</div>
+        <div class="eng-client">Enterprise IT</div>
+      </div>
+      <div class="eng-body">
+        <div class="eng-sector">Active Directory &amp; Network Infrastructure · HA</div>
+        <h3 class="eng-title">Enterprise Active Directory &amp; Network Infrastructure</h3>
+        <div class="eng-services"><span class="svc-tag">Active Directory</span><span class="svc-tag">VPN</span><span class="svc-tag">Firewall</span><span class="svc-tag">DR</span><span class="svc-tag">AWS VPC</span></div>
+        <div class="eng-flow">
+          <div class="flow-node" data-label="// Context"><p>Large enterprise with 1000+ users dependent on a single-AZ Active Directory setup. No redundancy, VPN instability, and no DR posture. Authentication failures during peak hours impacting productivity.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Approach"><p>Deployed enterprise Active Directory for 1000+ users with high availability and multi-AZ replication. Implemented VPN with firewall hardening, DR failover configuration, and network segmentation with least-privilege access.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Outcome"><p>99.9%+ uptime achieved post-deployment. Zero authentication outages in 6 months post-go-live. VPN stability eliminated all reported connectivity incidents.</p></div>
         </div>
-
-        <div class="role-block">
-          <div class="role-title">Solution Architect</div>
-          <div class="role-dates">JAN 2025 — JUL 2025</div>
-          <ul class="timeline-bullets">
-            <li>Architected AWS HA/DR infrastructure for <strong>3 enterprise production environments</strong> — achieved <strong>RTO &lt; 15 min and RPO &lt; 5 min</strong>, protecting SLAs for banking clients with high-volume daily transactions.</li>
-            <li>Reduced client infrastructure costs by <strong>35% (est. ₹40L+ annually)</strong> through compute right-sizing, Reserved Instances, and S3 lifecycle policies.</li>
-            <li>Designed containerised CI/CD pipelines (Docker + Jenkins) cutting deployments from bi-weekly manual to <strong>daily automated blue/green</strong> with zero downtime.</li>
-            <li>Validated infrastructure resilience via load testing and failover drills — achieving <strong>99.95%+ uptime</strong> across all production environments.</li>
-          </ul>
+        <div class="eng-outcomes">
+          <div class="outcome"><div class="out-val">1000+</div><div class="out-label">Users Served</div></div>
+          <div class="outcome"><div class="out-val">99.9%+</div><div class="out-label">Uptime Achieved</div></div>
+          <div class="outcome"><div class="out-val">0</div><div class="out-label">Auth Outages</div></div>
         </div>
       </div>
-
-      <!-- Freelance -->
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-company">Freelance Cloud & Infrastructure Consultant</div>
-        <div class="timeline-period">2022 — 2024</div>
-        <div class="timeline-location">📍 Pune, India &nbsp;·&nbsp; Independent Clients</div>
-        <ul class="timeline-bullets">
-          <li>Sole architect and delivery owner across <strong>8+ client engagements</strong> — scoped, designed, deployed, and supported full AWS environments independently.</li>
-          <li>Scaled an e-commerce client's AWS infrastructure (EC2, RDS, CloudFront, Auto Scaling) to absorb <strong>3× traffic growth</strong> without re-architecture or downtime.</li>
-          <li>Reduced a client's monthly AWS spend by <strong>28% within 60 days</strong> via idle resource cleanup, auto-scaling tuning, and S3 Glacier cold-storage migration.</li>
-          <li>Delivered end-to-end secure VPC designs with private/public subnet segmentation, NAT gateways, and IAM role-based access controls.</li>
-        </ul>
-      </div>
-
     </div>
-  </section>
 
-  <!-- PROJECTS -->
-<section id="projects">
-  <div class="section-tag reveal">Selected Work</div>
-  <h2 class="section-title reveal">Enterprise Projects & Architecture</h2>
-
-  <div class="skills-grid">
-
-    <div class="skill-card">
-      <div class="skill-card-header">
-        <div class="skill-icon">🧠</div>
-        <div class="skill-card-title">Education Platform Data Migration</div>
+    <!-- 03 -->
+    <div class="engagement reveal">
+      <div class="eng-meta">
+        <span class="eng-num">03</span>
+        <div class="eng-date">Core5 · 2025</div>
+        <div class="eng-client">Enterprise Retail</div>
       </div>
-      <div style="font-size:0.75rem; color:#3B82F6; margin-bottom:8px;">
-        50K+ RECORDS · ZERO DATA LOSS · PRODUCTION
-      </div>
-      <p style="font-size:0.9rem; line-height:1.7; color:var(--muted);">
-        Migrated large-scale academic datasets including <strong style="color:#1E40AF;">50K+ student records</strong>.
-        Designed validation workflows ensuring <strong style="color:#1E40AF;">100% data integrity</strong> and
-        reduced migration downtime by <strong style="color:#1E40AF;">~70%</strong>.
-      </p>
-      <div class="skill-tags" style="margin-top:12px;">
-        <span class="skill-tag">Data Migration</span>
-        <span class="skill-tag">Validation</span>
-        <span class="skill-tag">Cutover</span>
+      <div class="eng-body">
+        <div class="eng-sector">Legacy to AWS Migration · Production Workload</div>
+        <h3 class="eng-title">Legacy Infrastructure to AWS Migration — Zero Downtime</h3>
+        <div class="eng-services"><span class="svc-tag">AWS MGN</span><span class="svc-tag">DMS</span><span class="svc-tag">Migration Hub</span><span class="svc-tag">EC2</span><span class="svc-tag">RDS</span></div>
+        <div class="eng-flow">
+          <div class="flow-node" data-label="// Context"><p>Large enterprise running production workloads on ageing on-premise infrastructure. Business requirement: zero data loss, less than 5 minutes downtime during cutover, 100% data consistency across all migrated databases.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Approach"><p>Migrated production workload using AWS MGN and DMS with continuous replication. Dependency mapping, wave planning, parallel validation environments, and phased cutover windows with instant rollback capability at each gate.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Outcome"><p>Migration completed with &lt;5 minutes downtime. 100% data consistency confirmed post-migration. Infra dependency reduced by 60% through rearchitecting to managed AWS services.</p></div>
+        </div>
+        <div class="eng-outcomes">
+          <div class="outcome"><div class="out-val">&lt;5m</div><div class="out-label">Downtime</div></div>
+          <div class="outcome"><div class="out-val">100%</div><div class="out-label">Data Consistency</div></div>
+          <div class="outcome"><div class="out-val">60%</div><div class="out-label">Infra Dependency Reduced</div></div>
+        </div>
       </div>
     </div>
 
-    <!-- 2 -->
-    <div class="skill-card">
-      <div class="skill-card-header">
-        <div class="skill-icon">🏢</div>
-        <div class="skill-card-title">Active Directory & Network Infrastructure</div>
+    <!-- 04 -->
+    <div class="engagement reveal">
+      <div class="eng-meta">
+        <span class="eng-num">04</span>
+        <div class="eng-date">Core5 · 2025</div>
+        <div class="eng-client">E-Commerce</div>
       </div>
-      <div style="font-size:0.75rem; color:#3B82F6; margin-bottom:8px;">
-        1000+ USERS · HA · SECURE NETWORK
-      </div>
-      <p style="font-size:0.9rem; line-height:1.7; color:var(--muted);">
-        Deployed enterprise Active Directory for <strong style="color:#1E40AF;">1000+ users</strong> with high availability.
-        Implemented VPN, firewall, and DR achieving <strong style="color:#1E40AF;">99.9%+ uptime</strong>.
-      </p>
-      <div class="skill-tags" style="margin-top:12px;">
-        <span class="skill-tag">Active Directory</span>
-        <span class="skill-tag">VPN</span>
-        <span class="skill-tag">Firewall</span>
-        <span class="skill-tag">DR</span>
-      </div>
-    </div>
-
-    <!-- 3 -->
-    <div class="skill-card">
-      <div class="skill-card-header">
-        <div class="skill-icon">🛢️</div>
-        <div class="skill-card-title">SAP HA/DR Architecture</div>
-      </div>
-      <div style="font-size:0.75rem; color:#3B82F6; margin-bottom:8px;">
-        1TB+ DATA · &lt;15 MIN RTO · BFSI
-      </div>
-      <p style="font-size:0.9rem; line-height:1.7; color:var(--muted);">
-        Designed DR for SAP workload handling <strong style="color:#1E40AF;">1TB+ production data</strong>,
-        achieving <strong style="color:#1E40AF;">RTO &lt; 15 minutes</strong> and
-        <strong style="color:#1E40AF;">RPO &lt; 5 minutes</strong>.
-        Improved recovery time by <strong style="color:#1E40AF;">80%</strong>.
-      </p>
-      <div class="skill-tags" style="margin-top:12px;">
-        <span class="skill-tag">AWS</span>
-        <span class="skill-tag">EBS</span>
-        <span class="skill-tag">DR Strategy</span>
+      <div class="eng-body">
+        <div class="eng-sector">ERP Microservices Deployment · Performance</div>
+        <h3 class="eng-title">ERP Microservices Deployment — 45% Performance Boost</h3>
+        <div class="eng-services"><span class="svc-tag">EC2</span><span class="svc-tag">ECS</span><span class="svc-tag">Microservices</span><span class="svc-tag">ALB</span><span class="svc-tag">Load Balancing</span></div>
+        <div class="eng-flow">
+          <div class="flow-node" data-label="// Context"><p>A large enterprise running a monolithic ERP system with performance degradation at peak load. Application downtime during business-critical processing windows was causing financial and operational impact.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Approach"><p>Deployed ERP across distributed AWS instances using microservices architecture with ECS and ALB. Decomposed the monolith into independently scalable services. Implemented blue-green deployments for zero-downtime releases.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Outcome"><p>System performance improved by 45%. High availability ensured across all microservices with ALB health checks. Zero downtime deployments established as standard practice.</p></div>
+        </div>
+        <div class="eng-outcomes">
+          <div class="outcome"><div class="out-val">45%</div><div class="out-label">Performance Boost</div></div>
+          <div class="outcome"><div class="out-val">HA</div><div class="out-label">High Availability</div></div>
+          <div class="outcome"><div class="out-val">0</div><div class="out-label">Downtime Deploys</div></div>
+        </div>
       </div>
     </div>
 
-    <!-- 4 -->
-    <div class="skill-card">
-      <div class="skill-card-header">
-        <div class="skill-icon">🔄</div>
-        <div class="skill-card-title">Legacy to AWS Migration</div>
+    <!-- 05 -->
+    <div class="engagement reveal">
+      <div class="eng-meta">
+        <span class="eng-num">05</span>
+        <div class="eng-date">Core5 · 2025</div>
+        <div class="eng-client">Cost Engineering</div>
       </div>
-      <div style="font-size:0.75rem; color:#3B82F6; margin-bottom:8px;">
-        &lt;5 MIN DOWNTIME · 100% CONSISTENCY
-      </div>
-      <p style="font-size:0.9rem; line-height:1.7; color:var(--muted);">
-        Migrated production workload using <strong style="color:#1E40AF;">AWS MGN & DMS</strong>
-        with <strong style="color:#1E40AF;">&lt;5 minutes downtime</strong>.
-        Ensured <strong style="color:#1E40AF;">100% data consistency</strong> and reduced infra dependency by
-        <strong style="color:#1E40AF;">60%</strong>.
-      </p>
-      <div class="skill-tags" style="margin-top:12px;">
-        <span class="skill-tag">AWS MGN</span>
-        <span class="skill-tag">DMS</span>
-        <span class="skill-tag">Migration</span>
-      </div>
-    </div>
-
-    <!-- 5 -->
-    <div class="skill-card">
-      <div class="skill-card-header">
-        <div class="skill-icon">🚀</div>
-        <div class="skill-card-title">ERP Microservices Deployment</div>
-      </div>
-      <div style="font-size:0.75rem; color:#3B82F6; margin-bottom:8px;">
-        MICROSERVICES · 45% PERFORMANCE BOOST
-      </div>
-      <p style="font-size:0.9rem; line-height:1.7; color:var(--muted);">
-        Deployed ERP across distributed AWS instances using microservices architecture.
-        Improved system performance by <strong style="color:#1E40AF;">~45%</strong> and ensured
-        <strong style="color:#1E40AF;">high availability</strong>.
-      </p>
-      <div class="skill-tags" style="margin-top:12px;">
-        <span class="skill-tag">EC2</span>
-        <span class="skill-tag">Microservices</span>
-        <span class="skill-tag">Load Balancing</span>
+      <div class="eng-body">
+        <div class="eng-sector">AWS Cost Optimisation · Enterprise</div>
+        <h3 class="eng-title">AWS Cost Engineering: &#8377;40 Lakh Reclaimed</h3>
+        <div class="eng-services"><span class="svc-tag">Cost Explorer</span><span class="svc-tag">Reserved Instances</span><span class="svc-tag">S3 Lifecycle</span><span class="svc-tag">Trusted Advisor</span></div>
+        <div class="eng-flow">
+          <div class="flow-node" data-label="// Context"><p>Large enterprise running AWS without cost governance. Monthly bills scaling unpredictably. No tagging strategy, over-provisioned EC2 fleet, and idle resources bleeding spend — 20%+ of monthly bill on unused capacity.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Approach"><p>Full resource audit via Cost Explorer and Trusted Advisor. Rightsized 60% of EC2 fleet. Eliminated 20% idle resources. Introduced Reserved Instance strategy, S3 lifecycle policies, and automated non-prod shutdown schedules.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Outcome"><p>35% reduction in monthly AWS cost — &#8377;40 lakh+ in annualised savings — with zero performance degradation. Cost governance framework now standard for all new deployments.</p></div>
+        </div>
+        <div class="eng-outcomes">
+          <div class="outcome"><div class="out-val">35%</div><div class="out-label">Cost Reduced</div></div>
+          <div class="outcome"><div class="out-val">&#8377;40L+</div><div class="out-label">Annual Savings</div></div>
+          <div class="outcome"><div class="out-val">0%</div><div class="out-label">Perf Degradation</div></div>
+        </div>
       </div>
     </div>
 
-    <!-- 6 -->
-    <div class="skill-card">
-      <div class="skill-card-header">
-        <div class="skill-icon">💰</div>
-        <div class="skill-card-title">AWS Cost Optimization</div>
+    <!-- 06 -->
+    <div class="engagement reveal">
+      <div class="eng-meta">
+        <span class="eng-num">06</span>
+        <div class="eng-date">Core5 · 2025</div>
+        <div class="eng-client">Education Platform</div>
       </div>
-      <div style="font-size:0.75rem; color:#3B82F6; margin-bottom:8px;">
-        35% SAVINGS · ₹40L+ IMPACT
-      </div>
-      <p style="font-size:0.9rem; line-height:1.7; color:var(--muted);">
-        Reduced AWS cost by <strong style="color:#1E40AF;">35%</strong> (~₹40L annually).
-        Eliminated <strong style="color:#1E40AF;">20% idle resources</strong> and implemented governance model.
-      </p>
-      <div class="skill-tags" style="margin-top:12px;">
-        <span class="skill-tag">Cost Optimization</span>
-        <span class="skill-tag">Reserved Instances</span>
-        <span class="skill-tag">S3 Lifecycle</span>
-      </div>
-    </div>
-
-    <!-- 7 -->
-    <div class="skill-card">
-      <div class="skill-card-header">
-        <div class="skill-icon">🔐</div>
-        <div class="skill-card-title">CI/CD Automation</div>
-      </div>
-      <div style="font-size:0.75rem; color:#3B82F6; margin-bottom:8px;">
-        DAILY RELEASES · 80% FASTER DEPLOYMENT
-      </div>
-      <p style="font-size:0.9rem; line-height:1.7; color:var(--muted);">
-        Built CI/CD pipelines using Docker & Jenkins enabling
-        <strong style="color:#1E40AF;">daily deployments</strong>.
-        Reduced deployment time by <strong style="color:#1E40AF;">80%</strong> with zero downtime.
-      </p>
-      <div class="skill-tags" style="margin-top:12px;">
-        <span class="skill-tag">Docker</span>
-        <span class="skill-tag">Jenkins</span>
-        <span class="skill-tag">CI/CD</span>
+      <div class="eng-body">
+        <div class="eng-sector">Data Migration · Academic Records · Production</div>
+        <h3 class="eng-title">Education Platform Data Migration — 50K+ Student Records</h3>
+        <div class="eng-services"><span class="svc-tag">DMS</span><span class="svc-tag">DataSync</span><span class="svc-tag">RDS</span><span class="svc-tag">S3</span><span class="svc-tag">Data Validation</span></div>
+        <div class="eng-flow">
+          <div class="flow-node" data-label="// Context"><p>An education platform needed migration of 50K+ student records with 100% data integrity guarantee. Zero tolerance for data loss — records included academic history, assessments, and credentials used for certification.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Approach"><p>Migrated large-scale academic datasets using DMS and DataSync with automated validation workflows. Designed reconciliation scripts for 100% data integrity verification. Reduced migration downtime by 70% through parallel processing.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Outcome"><p>50K+ student records migrated with 100% data integrity verified. Migration downtime reduced by 70%. Platform successfully serving production traffic with zero data discrepancy reports post-cutover.</p></div>
+        </div>
+        <div class="eng-outcomes">
+          <div class="outcome"><div class="out-val">50K+</div><div class="out-label">Records Migrated</div></div>
+          <div class="outcome"><div class="out-val">100%</div><div class="out-label">Data Integrity</div></div>
+          <div class="outcome"><div class="out-val">70%</div><div class="out-label">Downtime Reduced</div></div>
+        </div>
       </div>
     </div>
 
-    <!-- 8 -->
-    <div class="skill-card">
-      <div class="skill-card-header">
-        <div class="skill-icon">📦</div>
-        <div class="skill-card-title">150TB Backup Migration</div>
+    <!-- 07 -->
+    <div class="engagement reveal">
+      <div class="eng-meta">
+        <span class="eng-num">07</span>
+        <div class="eng-date">Freelance · 2023-2024</div>
+        <div class="eng-client">DevOps</div>
       </div>
-      <div style="font-size:0.75rem; color:#3B82F6; margin-bottom:8px;">
-        150TB SCALE · 60% COST REDUCTION
+      <div class="eng-body">
+        <div class="eng-sector">CI/CD Automation · Daily Deployments</div>
+        <h3 class="eng-title">CI/CD Automation — 80% Faster Deployments</h3>
+        <div class="eng-services"><span class="svc-tag">Docker</span><span class="svc-tag">Jenkins</span><span class="svc-tag">ECS</span><span class="svc-tag">CodePipeline</span><span class="svc-tag">Blue/Green</span></div>
+        <div class="eng-flow">
+          <div class="flow-node" data-label="// Context"><p>SaaS company with manual deployment process taking 4–6 hours per release. Releases happening fortnightly due to deployment risk. Engineers spending significant time on deployment tasks instead of feature development.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Approach"><p>Built CI/CD pipelines using Docker and Jenkins enabling automated build, test, and deploy cycles. Implemented blue-green deployment strategy on ECS for zero-downtime releases with instant rollback. Automated infrastructure provisioning.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Outcome"><p>Deployment time reduced by 80%. Daily deployments now standard practice. Zero downtime deployments with automated rollback protecting production stability.</p></div>
+        </div>
+        <div class="eng-outcomes">
+          <div class="outcome"><div class="out-val">80%</div><div class="out-label">Faster Deployments</div></div>
+          <div class="outcome"><div class="out-val">Daily</div><div class="out-label">Release Cadence</div></div>
+          <div class="outcome"><div class="out-val">0</div><div class="out-label">Downtime Releases</div></div>
+        </div>
       </div>
-      <p style="font-size:0.9rem; line-height:1.7; color:var(--muted);">
-        Migrated <strong style="color:#1E40AF;">100–150TB data</strong> from NAS to AWS Glacier.
-        Achieved <strong style="color:#1E40AF;">3–4x faster transfer</strong> and reduced storage cost by
-        <strong style="color:#1E40AF;">~60%</strong>.
-      </p>
-      <div class="skill-tags" style="margin-top:12px;">
-        <span class="skill-tag">S3 Glacier</span>
-        <span class="skill-tag">Rclone</span>
-        <span class="skill-tag">EC2</span>
+    </div>
+
+    <!-- 08 -->
+    <div class="engagement reveal">
+      <div class="eng-meta">
+        <span class="eng-num">08</span>
+        <div class="eng-date">Freelance · 2022–2023</div>
+        <div class="eng-client">Storage &amp; Archival</div>
+      </div>
+      <div class="eng-body">
+        <div class="eng-sector">150TB Backup Migration · NAS to AWS Glacier</div>
+        <h3 class="eng-title">150TB Backup Migration — 60% Storage Cost Reduction</h3>
+        <div class="eng-services"><span class="svc-tag">S3 Glacier</span><span class="svc-tag">Rclone</span><span class="svc-tag">EC2</span><span class="svc-tag">S3 Lifecycle</span><span class="svc-tag">DataSync</span></div>
+        <div class="eng-flow">
+          <div class="flow-node" data-label="// Context"><p>Organisation maintaining 100–150TB of backup data on on-premise NAS with high operational costs, limited redundancy, and no offsite DR capability. Storage hardware nearing end-of-life with no refresh budget.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Approach"><p>Migrated 100–150TB of backup data from NAS to AWS Glacier using Rclone and DataSync with parallel transfer optimisation. Implemented S3 lifecycle policies for tiered archival. Validated data integrity checksums throughout transfer.</p></div>
+          <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          <div class="flow-node" data-label="// Outcome"><p>Transfer completed 3–4× faster than expected through parallel optimisation. Storage cost reduced by approximately 60%. Offsite DR capability established for the first time with automated lifecycle management.</p></div>
+        </div>
+        <div class="eng-outcomes">
+          <div class="outcome"><div class="out-val">150TB</div><div class="out-label">Data Migrated</div></div>
+          <div class="outcome"><div class="out-val">3–4×</div><div class="out-label">Faster Transfer</div></div>
+          <div class="outcome"><div class="out-val">60%</div><div class="out-label">Cost Reduced</div></div>
+        </div>
       </div>
     </div>
 
   </div>
 </section>
 
-  <!-- SKILLS -->
-  <section id="skills">
-    <div class="section-tag reveal">Technical Skills</div>
-    <h2 class="section-title reveal">What I Work With</h2>
-
-    <div class="skills-grid">
-      <div class="skill-card">
-        <div class="skill-card-header">
-          <div class="skill-icon">☁️</div>
-          <div class="skill-card-title">AWS Core Services</div>
+<!-- PHILOSOPHY -->
+<section id="philosophy">
+  <div class="bp-grid"></div>
+  <div class="phil-layout">
+    <div class="phil-left">
+      <div class="sec-tag reveal">Design Philosophy</div>
+      <h2 class="sec-heading reveal">How I<br>design for <em>failure</em></h2>
+      <p class="phil-intro reveal">Every system will eventually fail. The architecture's job is to make that failure invisible, recoverable, and — with the right design — irrelevant to the person using it. These are the principles I apply to every engagement.</p>
+    </div>
+    <div class="phil-right">
+      <div class="principles">
+        <div class="principle reveal">
+          <div class="principle-header"><span class="principle-n">01 /</span><span class="principle-title">Assume the instance dies</span></div>
+          <p class="principle-body">Design for stateless compute from the start. If a single EC2 going down affects users, the architecture is wrong. Auto Scaling groups and multi-AZ are baseline requirements, not optional features.</p>
+          <span class="principle-mark">COMPUTE</span>
         </div>
-        <div class="skill-tags">
-          <span class="skill-tag">EC2</span><span class="skill-tag">VPC</span>
-          <span class="skill-tag">RDS</span><span class="skill-tag">S3</span>
-          <span class="skill-tag">ECS</span><span class="skill-tag">EKS</span>
-          <span class="skill-tag">Lambda</span><span class="skill-tag">IAM</span>
-          <span class="skill-tag">Route 53</span><span class="skill-tag">CloudFront</span>
-          <span class="skill-tag">Auto Scaling</span><span class="skill-tag">CloudWatch</span>
-          <span class="skill-tag">ELB</span><span class="skill-tag">SNS</span>
-          <span class="skill-tag">SQS</span><span class="skill-tag">CloudTrail</span>
-          <span class="skill-tag">Glacier</span>
+        <div class="principle reveal">
+          <div class="principle-header"><span class="principle-n">02 /</span><span class="principle-title">The runbook comes before the DR test</span></div>
+          <p class="principle-body">An untested DR plan is a hypothesis. I write runbooks first, execute controlled failure scenarios, then update the runbook based on what actually happened — not what was expected.</p>
+          <span class="principle-mark">RESILIENCE</span>
         </div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-header">
-          <div class="skill-icon">🚀</div>
-          <div class="skill-card-title">Cloud Migration</div>
+        <div class="principle reveal">
+          <div class="principle-header"><span class="principle-n">03 /</span><span class="principle-title">Cost is an architecture decision</span></div>
+          <p class="principle-body">Over-provisioning is a failure mode with a monthly invoice. I size to load profiles, not to fear. Reserved Instances for baseline. Spot for burst. Auto Scaling for everything in between.</p>
+          <span class="principle-mark">COST</span>
         </div>
-        <div class="skill-tags">
-          <span class="skill-tag">AWS MGN</span><span class="skill-tag">AWS DMS</span>
-          <span class="skill-tag">DataSync</span><span class="skill-tag">Rehost</span>
-          <span class="skill-tag">Replatform</span><span class="skill-tag">Lift & Shift</span>
-          <span class="skill-tag">Dependency Mapping</span><span class="skill-tag">Cutover Planning</span>
-          <span class="skill-tag">Pre/Post Validation</span>
+        <div class="principle reveal">
+          <div class="principle-header"><span class="principle-n">04 /</span><span class="principle-title">Security is layered, not bolted on</span></div>
+          <p class="principle-body">IAM least-privilege from day one. VPC segmentation by function. Network ACLs and Security Groups as defence-in-depth. Security is not a final sprint — it's the shape of the architecture itself.</p>
+          <span class="principle-mark">SECURITY</span>
         </div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-header">
-          <div class="skill-icon">🏗️</div>
-          <div class="skill-card-title">Architecture</div>
-        </div>
-        <div class="skill-tags">
-          <span class="skill-tag">High Availability</span><span class="skill-tag">Disaster Recovery</span>
-          <span class="skill-tag">Multi-AZ</span><span class="skill-tag">Multi-Region</span>
-          <span class="skill-tag">Cost Optimisation</span><span class="skill-tag">Performance Eng.</span>
-          <span class="skill-tag">Hybrid Cloud</span><span class="skill-tag">HLD / LLD</span>
-        </div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-header">
-          <div class="skill-icon">⚙️</div>
-          <div class="skill-card-title">DevOps & Security</div>
-        </div>
-        <div class="skill-tags">
-          <span class="skill-tag">Docker</span><span class="skill-tag">Jenkins</span>
-          <span class="skill-tag">CI/CD Pipelines</span><span class="skill-tag">Blue/Green Deploy</span>
-          <span class="skill-tag">IAM Policy</span><span class="skill-tag">Network ACLs</span>
-          <span class="skill-tag">Infra Hardening</span><span class="skill-tag">KMS</span>
-          <span class="skill-tag">GuardDuty</span>
-        </div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-header">
-          <div class="skill-icon">🌐</div>
-          <div class="skill-card-title">Other Platforms</div>
-        </div>
-        <div class="skill-tags">
-          <span class="skill-tag">Azure</span><span class="skill-tag">GCP</span>
-          <span class="skill-tag">Enterprise Consulting</span>
-          <span class="skill-tag">Technical Bid Mgmt</span>
-          <span class="skill-tag">Client Advisory</span>
-        </div>
-      </div>
-
-      <div class="skill-card">
-        <div class="skill-card-header">
-          <div class="skill-icon">📊</div>
-          <div class="skill-card-title">Domains</div>
-        </div>
-        <div class="skill-tags">
-          <span class="skill-tag">Banking</span><span class="skill-tag">Fintech</span>
-          <span class="skill-tag">Enterprise IT</span><span class="skill-tag">E-Commerce</span>
-          <span class="skill-tag">SME / Startup</span><span class="skill-tag">SLA Management</span>
+        <div class="principle reveal">
+          <div class="principle-header"><span class="principle-n">05 /</span><span class="principle-title">A migration is an operation, not an event</span></div>
+          <p class="principle-body">Migrations fail when treated as one-time projects. I run them operationally: dependency mapping, wave planning, parallel validation, rollback gates. Cutover should feel like a routine deployment.</p>
+          <span class="principle-mark">MIGRATION</span>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CREDENTIALS -->
-  <section id="credentials">
-    <div class="section-tag reveal">Credentials</div>
-    <h2 class="section-title reveal">Certifications & Education</h2>
+<!-- STACK -->
+<section id="stack">
+  <div class="bp-grid"></div>
+  <div class="stack-wrap">
+    <div class="sec-tag reveal">Technical Stack</div>
+    <h2 class="sec-heading reveal" style="margin-bottom:48px">Competencies &amp;<br><em>tools of the trade</em></h2>
+    <table class="stack-table">
+      <tbody>
+        <tr class="stack-group-header"><td colspan="3">Infrastructure &amp; Architecture</td></tr>
+        <tr class="stack-row reveal"><td>High Availability / DR</td><td>Multi-AZ, Multi-Region, Active-Passive, Active-Active, automated failover</td><td>EC2 · RDS · Route 53 · ALB</td></tr>
+        <tr class="stack-row reveal"><td>Cloud Migration</td><td>Lift &amp; Shift, Replatform, dependency mapping, wave planning, cutover</td><td>AWS MGN · DMS · DataSync</td></tr>
+        <tr class="stack-row reveal"><td>Network Design</td><td>VPC architecture, subnetting, peering, hybrid connectivity, edge</td><td>VPC · Site to Site VPN · Client to Site VPN · Transit Gateway · CloudFront</td></tr>
+        <tr class="stack-group-header"><td colspan="3">Compute &amp; Storage</td></tr>
+        <tr class="stack-row reveal"><td>Compute</td><td>EC2 Auto Scaling, container orchestration, serverless event-driven</td><td>EC2 · ECS · EKS · Lambda</td></tr>
+        <tr class="stack-row reveal"><td>Data &amp; Storage</td><td>Relational, NoSQL, object storage, archival, caching layers</td><td>RDS · DynamoDB · S3 · Glacier</td></tr>
+        <tr class="stack-group-header"><td colspan="3">DevOps &amp; Security</td></tr>
+        <tr class="stack-row reveal"><td>CI/CD &amp; Delivery</td><td>Pipeline design, containerisation, blue-green &amp; canary strategies</td><td>Jenkins · Docker · ECS · CodePipeline</td></tr>
+        <tr class="stack-row reveal"><td>Security</td><td>Identity, encryption at rest/transit, threat detection, compliance</td><td>IAM · KMS · GuardDuty · WAF</td></tr>
+        <tr class="stack-row reveal"><td>Observability</td><td>Metrics, logging, alerting, cost visibility, audit trails</td><td>CloudWatch · CloudTrail · Cost Explorer</td></tr>
+        <tr class="stack-group-header"><td colspan="3">Sectors</td></tr>
+        <tr class="stack-row reveal"><td>Industry Experience</td><td>Banking, Fintech, Enterprise IT, E-Commerce, Education, SME, Startup</td><td>Regulated · Mission-critical</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-    <div class="cred-grid">
-      <div class="cred-card reveal">
-        <div class="cred-badge">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Certification
-        </div>
-        <div class="cred-title">AWS Certified Solutions Architect</div>
-        <div class="cred-sub">Associate Level &nbsp;·&nbsp; Amazon Web Services</div>
-        <div class="cred-year">CERTIFIED — 2022</div>
+<!-- DIAGRAM SECTION (pipeline) -->
+<section id="diagram-section">
+  <div class="diagram-container">
+    <div class="diagram-label">// Reference Architecture — Zero-Downtime Deployment Pipeline</div>
+    <h2 class="diagram-title reveal">The systems I build<br><em>look like this</em></h2>
+    <svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+      <defs>
+        <marker id="wa" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0.5 L6,3.5 L0,6.5 Z" fill="rgba(242,237,228,0.4)"/></marker>
+        <pattern id="sg" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(242,237,228,0.04)" stroke-width="0.5"/></pattern>
+      </defs>
+      <rect width="1000" height="200" fill="url(#sg)"/>
+      <rect x="30" y="50" width="140" height="100" rx="2" fill="rgba(242,237,228,0.05)" stroke="rgba(242,237,228,0.2)" stroke-width="1.2"/>
+      <text x="100" y="85" font-family="DM Mono,monospace" font-size="8" fill="rgba(242,237,228,0.8)" text-anchor="middle" letter-spacing="1.5" font-weight="500">DEVELOPER</text>
+      <text x="100" y="101" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.4)" text-anchor="middle">Git push · branch</text>
+      <text x="100" y="115" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.4)" text-anchor="middle">PR + code review</text>
+      <text x="100" y="38" font-family="DM Mono,monospace" font-size="6" fill="rgba(242,237,228,0.2)" text-anchor="middle" letter-spacing="2">STAGE 1</text>
+      <line x1="170" y1="100" x2="218" y2="100" stroke="rgba(242,237,228,0.25)" stroke-width="1.2" marker-end="url(#wa)"/>
+      <rect x="220" y="50" width="140" height="100" rx="2" fill="rgba(242,237,228,0.05)" stroke="rgba(242,237,228,0.2)" stroke-width="1.2"/>
+      <text x="290" y="85" font-family="DM Mono,monospace" font-size="8" fill="rgba(242,237,228,0.8)" text-anchor="middle" letter-spacing="1.5" font-weight="500">CI PIPELINE</text>
+      <text x="290" y="101" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.4)" text-anchor="middle">Build · Test · Scan</text>
+      <text x="290" y="115" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.4)" text-anchor="middle">Jenkins · Docker</text>
+      <text x="290" y="38" font-family="DM Mono,monospace" font-size="6" fill="rgba(242,237,228,0.2)" text-anchor="middle" letter-spacing="2">STAGE 2</text>
+      <line x1="360" y1="100" x2="408" y2="100" stroke="rgba(242,237,228,0.25)" stroke-width="1.2" marker-end="url(#wa)"/>
+      <rect x="410" y="50" width="140" height="100" rx="2" fill="rgba(242,237,228,0.05)" stroke="rgba(242,237,228,0.2)" stroke-width="1.2"/>
+      <text x="480" y="85" font-family="DM Mono,monospace" font-size="8" fill="rgba(242,237,228,0.8)" text-anchor="middle" letter-spacing="1.5" font-weight="500">STAGING</text>
+      <text x="480" y="101" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.4)" text-anchor="middle">Integration tests</text>
+      <text x="480" y="115" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.4)" text-anchor="middle">Load validation</text>
+      <text x="480" y="38" font-family="DM Mono,monospace" font-size="6" fill="rgba(242,237,228,0.2)" text-anchor="middle" letter-spacing="2">STAGE 3</text>
+      <line x1="550" y1="100" x2="598" y2="100" stroke="rgba(242,237,228,0.25)" stroke-width="1.2" marker-end="url(#wa)"/>
+      <rect x="600" y="50" width="140" height="100" rx="2" fill="rgba(242,237,228,0.06)" stroke="rgba(242,237,228,0.28)" stroke-width="1.8"/>
+      <text x="670" y="85" font-family="DM Mono,monospace" font-size="8" fill="rgba(242,237,228,0.9)" text-anchor="middle" letter-spacing="1.5" font-weight="500">BLUE/GREEN</text>
+      <text x="670" y="101" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.5)" text-anchor="middle">Zero-downtime deploy</text>
+      <text x="670" y="115" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.5)" text-anchor="middle">Instant rollback</text>
+      <text x="670" y="38" font-family="DM Mono,monospace" font-size="6" fill="rgba(242,237,228,0.2)" text-anchor="middle" letter-spacing="2">STAGE 4</text>
+      <line x1="740" y1="100" x2="788" y2="100" stroke="rgba(242,237,228,0.3)" stroke-width="1.8" marker-end="url(#wa)"/>
+      <rect x="790" y="30" width="180" height="140" rx="2" fill="rgba(242,237,228,0.04)" stroke="rgba(242,237,228,0.3)" stroke-width="1.8" stroke-dasharray="5,4"/>
+      <text x="880" y="72" font-family="DM Mono,monospace" font-size="8" fill="rgba(242,237,228,0.75)" text-anchor="middle" letter-spacing="1.5" font-weight="500">PRODUCTION</text>
+      <text x="880" y="90" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.4)" text-anchor="middle">Multi-AZ · Auto Scaling</text>
+      <text x="880" y="106" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.4)" text-anchor="middle">CloudWatch alarms</text>
+      <text x="880" y="122" font-family="DM Mono,monospace" font-size="6.5" fill="rgba(242,237,228,0.4)" text-anchor="middle">DR failover armed</text>
+      <text x="880" y="18" font-family="DM Mono,monospace" font-size="6" fill="rgba(242,237,228,0.15)" text-anchor="middle" letter-spacing="2">LIVE</text>
+      <text x="30" y="175" font-family="DM Mono,monospace" font-size="6" fill="rgba(242,237,228,0.18)" letter-spacing="0.8">REF: SD-CICD-002 · CORE5 SYSTEMS · ZERO-DOWNTIME DEPLOYMENT PIPELINE</text>
+    </svg>
+  </div>
+</section>
+
+<!-- CREDENTIALS -->
+<section id="credentials">
+  <div class="bp-grid"></div>
+  <div class="cred-layout">
+    <div>
+      <div class="sec-tag reveal">Credentials</div>
+      <h2 class="sec-heading reveal" style="margin-bottom:24px">Verified<br><em>credentials</em></h2>
+      <p class="cred-intro reveal">AWS Certified Solutions Architect – Associate. B.Tech Computer Science, LPU 2022. Promoted from Solution Architect to Senior Solution Architect at Core5 within 7 months. Currently preparing for Professional-level certification.</p>
+    </div>
+    <div class="cred-list">
+      <div class="cred-entry reveal">
+        <div><div class="cred-name">AWS Certified Solutions Architect</div><div class="cred-org">Associate Level · Amazon Web Services · 2022</div></div>
+        <span class="cred-stamp stamp-active">Active</span>
       </div>
-
-      <div class="cred-card reveal" style="transition-delay:0.1s">
-        <div class="cred-badge">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-          Education
-        </div>
-        <div class="cred-title">Bachelor of Technology — Computer Science</div>
-        <div class="cred-sub">Lovely Professional University &nbsp;·&nbsp; Phagwara, Punjab</div>
-        <div class="cred-year">GRADUATED — 2022</div>
+      <div class="cred-entry reveal">
+        <div><div class="cred-name">AWS Certified Solutions Architect</div><div class="cred-org">Professional Level · Amazon Web Services · In Preparation</div></div>
+        <span class="cred-stamp stamp-progress">In Progress</span>
       </div>
-
-      <div class="cred-card reveal" style="transition-delay:0.2s">
-        <div class="cred-badge" style="color:#D97706;background:#FEF3C7">
-          ⏳ In Progress
-        </div>
-        <div class="cred-title">AWS Certified Solutions Architect</div>
-        <div class="cred-sub">Professional Level &nbsp;·&nbsp; Amazon Web Services</div>
-        <div class="cred-year" style="color:#D97706">CURRENTLY PREPARING</div>
+      <div class="cred-entry reveal">
+        <div><div class="cred-name">Bachelor of Technology — Computer Science</div><div class="cred-org">Lovely Professional University · Phagwara, Punjab · 2022</div></div>
+        <span class="cred-stamp stamp-active">Verified</span>
+      </div>
+      <div class="cred-entry reveal">
+        <div><div class="cred-name">Senior Solution Architect</div><div class="cred-org">Promoted at Core5 Systems &amp; Services Pvt Ltd · August 2025 · 7 months post-hire</div></div>
+        <span class="cred-stamp stamp-active">Current</span>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="about-noise"></div>
-    <div class="section-tag">Let's Talk</div>
-    <h2 class="section-title">Open to the Right<br>Opportunity</h2>
-    <p class="contact-sub">
-      Whether you're hiring for a senior cloud role or exploring consulting,
-      I'm happy to have a direct conversation.
-    </p>
-    <div class="contact-links">
-      <a href="mailto:shubhamdongarwar9@gmail.com" class="contact-link">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-        shubhamdongarwar9@gmail.com
-      </a>
-      <a href="https://www.linkedin.com/in/shubhamdongarwar/" target="_blank" rel="noopener" class="contact-link">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-        linkedin.com/in/shubhamdongarwar
-      </a>
-      <a href="tel:08668974489" class="contact-link">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        +91 86689 74489
-      </a>
+<!-- CONTACT -->
+<section id="contact">
+  <div class="bp-grid"></div>
+  <div class="contact-wrap">
+    <div class="contact-left">
+      <div class="sec-tag reveal" style="color:rgba(242,237,228,0.3);"><span style="background:rgba(242,237,228,0.15);width:20px;height:1px;display:inline-block;"></span>Contact</div>
+      <h2 class="contact-headline reveal">Open to<br>the right<br><em>conversation</em></h2>
+      <p class="contact-sub reveal">Senior cloud roles, architecture advisory, or consulting engagements. Direct conversations only. Mumbai-based, open to hybrid.</p>
     </div>
-  </section>
+    <div class="contact-right">
+      <div class="sec-tag reveal" style="color:rgba(242,237,228,0.25);"><span style="background:rgba(242,237,228,0.1);width:20px;height:1px;display:inline-block;"></span>Reach out</div>
+      <div class="contact-links">
+        <a href="mailto:shubhamdongarwar9@gmail.com" class="contact-link reveal">
+          <div><div class="cl-type">Email</div><div class="cl-val">shubhamdongarwar9@gmail.com</div></div>
+          <span class="cl-arr">&#8594;</span>
+        </a>
+        <a href="https://www.linkedin.com/in/shubhamdongarwar/" target="_blank" rel="noopener" class="contact-link reveal">
+          <div><div class="cl-type">LinkedIn</div><div class="cl-val">linkedin.com/in/shubhamdongarwar</div></div>
+          <span class="cl-arr">&#8594;</span>
+        </a>
+        <a href="tel:08668974489" class="contact-link reveal">
+          <div><div class="cl-type">Phone</div><div class="cl-val">+91 86689 74489</div></div>
+          <span class="cl-arr">&#8594;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    <p>© 2025 Shubham Dongarwar &nbsp;·&nbsp; Senior Solution Architect, Mumbai</p>
-    <span class="footer-mono">Built with HTML · Hosted on GitHub Pages</span>
-  </footer>
+<footer>
+  <div class="foot-id">&#169; 2025 Shubham Dongarwar &nbsp;&middot;&nbsp; Senior Solutions Architect &nbsp;&middot;&nbsp; Mumbai, India</div>
+  <div class="foot-tag">Built with HTML &nbsp;&middot;&nbsp; GitHub Pages</div>
+</footer>
 
-  <script>
-    // Custom cursor
-    const cursor = document.getElementById('cursor');
-    const ring   = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    function animateCursor() {
-      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-      requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
-    document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', () => {
-        cursor.style.width = '16px'; cursor.style.height = '16px';
-        ring.style.width = '50px'; ring.style.height = '50px';
-      });
-      el.addEventListener('mouseleave', () => {
-        cursor.style.width = '10px'; cursor.style.height = '10px';
-        ring.style.width = '36px'; ring.style.height = '36px';
-      });
-    });
-
-    // Nav scroll
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 40);
-    });
-
-    // Scroll reveal
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal, .timeline-item, .skill-card, .cred-card').forEach(el => observer.observe(el));
-  </script>
+<script>
+  const cur=document.getElementById('cur'),cross=document.getElementById('cur-cross');
+  let mx=0,my=0,cx=0,cy=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function loop(){cur.style.left=mx+'px';cur.style.top=my+'px';cx+=(mx-cx)*0.08;cy+=(my-cy)*0.08;cross.style.left=cx+'px';cross.style.top=cy+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='10px';cur.style.height='10px';});
+    el.addEventListener('mouseleave',()=>{cur.style.width='6px';cur.style.height='6px';});
+  });
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.08});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4)*0.08+'s';io.observe(el);});
+</script>
 </body>
 </html>
-
